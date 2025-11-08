@@ -9,9 +9,9 @@ export default function NavBar() {
     <nav className="w-full backdrop-blur-lg bg-white/70 border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
 
-        {/* Brand Logo (Click → Signup page) */}
+        {/* Brand Logo (Click → Home page) */}
         <div
-          onClick={() => router.push("/signup")}
+          onClick={() => router.push("/")}   // ✅ Changed here
           className="flex items-center cursor-pointer group select-none"
         >
           <div className="relative w-10 h-10 flex items-center justify-center">
