@@ -20,11 +20,12 @@ model User{
   name     String?
   blogs    Blog[]
 }
-model Blog{
-  id        Int @id @default(autoincrement())
+model Blog {
+  id        Int      @id @default(autoincrement())
   authorID  Int
   content   String
   title     String
-  published Boolean @default(false)
-  author    User @relation(fields: [authorID],references: [id])
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())   // ✅ Add this line
+  author    User     @relation(fields: [authorID], references: [id])
 }

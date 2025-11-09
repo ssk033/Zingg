@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import { useState } from "react";
+
 type AddProps = {
   onClose: () => void;
   onBlogAdded: () => void;
@@ -19,22 +20,35 @@ export function Add({ onClose, onBlogAdded }: AddProps) {
   };
 
   const handlePost = async () => {
-    setLoading(true);
+    if (!title.trim() || !content.trim()) {
+      alert("Title and Content are required");
+      return;
+    }
 
+    setLoading(true);
     try {
-      const response = await axios.post("/api/blog", {
+      // You can replace 13 with session user id later
+      const res = await axios.post("/api/blog", {
         title,
         content,
-        authorID: 13, // as per prisma schema
+        authorID: 2, // number literal; server still coerces safely
       });
 
-      if (response.status === 201) {
-        setLoading(false);
-        handleClose();      // close popup
-        onBlogAdded();      // auto-refresh blogs in parent (no reload)
+      // Expect 201 with created blog object
+      if (res.status === 201) {
+        onBlogAdded(); // parent refresh (no reload)
+        handleClose(); // close modal with animation
+        // Optionally reset form:
+        setTitle("");
+        setContent("");
+      } else {
+        // Fallback (shouldn't hit due to API)
+        alert("Unexpected response from server.");
       }
-    } catch (err) {
-      console.log("POST FAILED ❌", err);
+    } catch (err: any) {
+      console.error("❌ POST FAILED:", err?.response?.data || err?.message);
+      alert(err?.response?.data?.error || "Something went wrong while creating the blog.");
+    } finally {
       setLoading(false);
     }
   };
@@ -49,11 +63,11 @@ export function Add({ onClose, onBlogAdded }: AddProps) {
         shadow-[0_0_35px_rgba(255,255,255,0.4)] backdrop-blur-xl transition-all duration-300
         ${isClosing ? "translate-y-10 opacity-0" : "translate-y-0 opacity-100"}`}
       >
-
         <button
           onClick={handleClose}
           className="absolute top-3 right-4 text-white text-2xl hover:scale-125 transition"
           title="Close"
+          aria-label="Close add blog modal"
         >
           ✖
         </button>
@@ -69,6 +83,8 @@ export function Add({ onClose, onBlogAdded }: AddProps) {
           onChange={(e) => setTitle(e.target.value)}
           className="w-full p-3 bg-transparent border border-white/40 text-white rounded-lg mb-6
           focus:border-white focus:shadow-[0_0_20px_white] outline-none transition-all duration-300"
+          disabled={loading}
+          required
         />
 
         <textarea
@@ -77,6 +93,8 @@ export function Add({ onClose, onBlogAdded }: AddProps) {
           onChange={(e) => setContent(e.target.value)}
           className="w-full h-56 p-3 bg-transparent border border-white/40 text-white rounded-lg mb-8
           focus:border-white focus:shadow-[0_0_20px_white] outline-none transition-all duration-300"
+          disabled={loading}
+          required
         />
 
         {loading ? (
@@ -87,7 +105,8 @@ export function Add({ onClose, onBlogAdded }: AddProps) {
           <button
             onClick={handlePost}
             className="w-full py-2.5 text-black font-semibold rounded-full bg-white
-            hover:shadow-[0_0_25px_white] hover:scale-[1.05] transition-all duration-300"
+            hover:shadow-[0_0_25px_white] hover:scale-[1.05] transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+            disabled={loading}
           >
             Post
           </button>
