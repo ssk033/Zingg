@@ -2,21 +2,23 @@
 
 import axios from "axios";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 type AddProps = {
   onClose: () => void;
   onBlogAdded: () => void;
 };
 
-export function Add({ onClose, onBlogAdded }: AddProps) {
+export default function Add({ onClose, onBlogAdded }: AddProps) {
+  const { data: session } = useSession();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [isClosing, setIsClosing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
 
   const handleClose = () => {
     setIsClosing(true);
-    setTimeout(() => onClose(), 300);
+    setTimeout(() => onClose(), 250);
   };
 
   const handlePost = async () => {
@@ -25,29 +27,31 @@ export function Add({ onClose, onBlogAdded }: AddProps) {
       return;
     }
 
+    if (!session?.user?.id) {
+      alert("You must be logged in to post a blog.");
+      return;
+    }
+
     setLoading(true);
+
     try {
-      // You can replace 13 with session user id later
       const res = await axios.post("/api/blog", {
         title,
         content,
-        authorID: 2, // number literal; server still coerces safely
+        authorID: session.user.id, // ✅ STRING id jaa rahi hai
       });
 
-      // Expect 201 with created blog object
+      console.log("✅ SERVER RESPONSE:", res.data);
+
       if (res.status === 201) {
-        onBlogAdded(); // parent refresh (no reload)
-        handleClose(); // close modal with animation
-        // Optionally reset form:
+        onBlogAdded();
+        handleClose();
         setTitle("");
         setContent("");
-      } else {
-        // Fallback (shouldn't hit due to API)
-        alert("Unexpected response from server.");
       }
-    } catch (err: any) {
-      console.error("❌ POST FAILED:", err?.response?.data || err?.message);
-      alert(err?.response?.data?.error || "Something went wrong while creating the blog.");
+    } catch (error: any) {
+      console.log("❌ POST ERROR:", error?.response?.data || error?.message);
+      alert(error?.response?.data?.error || "Server error");
     } finally {
       setLoading(false);
     }
@@ -66,8 +70,6 @@ export function Add({ onClose, onBlogAdded }: AddProps) {
         <button
           onClick={handleClose}
           className="absolute top-3 right-4 text-white text-2xl hover:scale-125 transition"
-          title="Close"
-          aria-label="Close add blog modal"
         >
           ✖
         </button>
@@ -106,7 +108,6 @@ export function Add({ onClose, onBlogAdded }: AddProps) {
             onClick={handlePost}
             className="w-full py-2.5 text-black font-semibold rounded-full bg-white
             hover:shadow-[0_0_25px_white] hover:scale-[1.05] transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
-            disabled={loading}
           >
             Post
           </button>

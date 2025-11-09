@@ -71,16 +71,18 @@ export default function Signin() {
           <div className="flex-1 border-t border-white/20"></div>
         </div>
 
+        {/* ✅ GOOGLE LOGIN */}
         <button
-          onClick={() => signIn("google")}
+          onClick={() => signIn("google", { callbackUrl: "/blogs" })}
           className="w-full py-2.5 flex items-center justify-center gap-3 rounded-lg font-medium border border-white/40 text-white hover:bg-white hover:text-black hover:shadow-[0_0_25px_white] transition-all duration-300"
         >
           <img src="/icons/google-gmail-svgrepo-com.svg" alt="Google" className="w-5 h-5" />
           Continue with Google
         </button>
 
+        {/* ✅ LINKEDIN LOGIN */}
         <button
-          onClick={() => signIn("linkedin")}
+          onClick={() => signIn("linkedin", { callbackUrl: "/blogs" })}
           className="w-full py-2.5 flex items-center justify-center gap-3 rounded-lg mt-3 font-medium border border-white/40 text-white hover:bg-white hover:text-black hover:shadow-[0_0_25px_white] transition-all duration-300"
         >
           <img src="/icons/linkedin-svgrepo-com.svg" alt="LinkedIn" className="w-5 h-5" />

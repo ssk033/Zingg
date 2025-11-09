@@ -1,11 +1,9 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-
-console.log("SECRET LOADED:", process.env.NEXTAUTH_SECRET); // ✅ Debug
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -23,34 +21,38 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
 
-      async authorize(credentials) {
-        if (!credentials?.username || !credentials?.password) return null;
+      async authorize(credentials): Promise<any> {
+        if (!credentials?.username || !credentials.password) return null;
 
         const user = await prisma.user.findUnique({
           where: { username: credentials.username },
         });
 
-        if (!user) return null;
+        if (!user || !user.password) return null;
 
-        const isValid = await bcrypt.compare(credentials.password, user.password);
-        if (!isValid) return null;
+        const isValidPassword = await bcrypt.compare(
+          credentials.password,
+          user.password
+        );
+
+        if (!isValidPassword) return null;
 
         return {
-          id: user.id.toString(),
-          name: user.name,
-          username: user.username,
-          email: user.username, // required for next-auth
+          id: user.id,
+          username: user.username!,
         };
       },
     }),
   ],
 
-  session: {
-    strategy: "jwt",
-  },
-
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({
+      token,
+      user,
+    }: {
+      token: import("next-auth/jwt").JWT;
+      user?: any;
+    }) {
       if (user) {
         token.id = user.id;
         token.username = user.username;
@@ -58,20 +60,24 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
 
-    async session({ session, token }) {
+    async session({
+      session,
+      token,
+    }: {
+      session: import("next-auth").Session;
+      token: import("next-auth/jwt").JWT;
+    }) {
       session.user = {
-        id: token.id as string,
-        username: token.username as string,
+        id: String(token.id),
+        username: String(token.username),
       };
       return session;
     },
   },
 
-  pages: {
-    signIn: "/signin",
-  },
-
-  secret: process.env.NEXTAUTH_SECRET ?? "ZINGG_BACKUP_SECRET",
+  session: { strategy: "jwt" },
+  pages: { signIn: "/signin" },
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 const handler = NextAuth(authOptions);

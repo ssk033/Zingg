@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 
-const prisma = new PrismaClient();
-
-// ✅ POST (Create Blog)
+// ✅ CREATE BLOG (POST)
 export async function POST(req: Request) {
   try {
-    const { title, content, authorID } = await req.json();
+    const body = await req.json();
+    const { title, content, authorID } = body;
 
-    if (!title || !content || authorID === undefined || authorID === null) {
+    if (!title?.trim() || !content?.trim() || !authorID) {
       return NextResponse.json(
         { error: "Missing required fields: title, content, authorID" },
         { status: 400 }
@@ -17,38 +16,42 @@ export async function POST(req: Request) {
 
     const blog = await prisma.blog.create({
       data: {
-        title: String(title).trim(),
-        content: String(content).trim(),
-        authorID: Number(authorID), // ✅ critical fix
-        // published defaults to false via schema
-        // createdAt defaults via schema
+        title,
+        content,
+        authorID,
       },
     });
 
-    // Return created object directly (simpler for client)
     return NextResponse.json(blog, { status: 201 });
-  } catch (error: any) {
-    console.error("🔥 Prisma Error (POST /api/blog):", error);
-    // Bubble up prisma validation messages when safe
-    const msg =
-      typeof error?.message === "string" && error.message.length < 200
-        ? error.message
-        : "Internal Server Error";
-    return NextResponse.json({ error: msg }, { status: 500 });
+  } catch (err) {
+    console.error("❌ POST /api/blog Error:", err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
 
-// ✅ GET (Fetch all blogs)
+// ✅ GET ALL BLOGS (FETCH)
 export async function GET() {
   try {
     const blogs = await prisma.blog.findMany({
-      include: { author: true },  // fetch author details
-      orderBy: { id: "desc" },    // latest first
+      include: {
+        author: {
+          select: { username: true, name: true, image: true },
+        },
+        _count: {
+          select: {
+            likes: true,
+            comments: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     return NextResponse.json({ blogs }, { status: 200 });
-  } catch (error) {
-    console.error("🔥 Prisma Error (GET /api/blog):", error);
-    return NextResponse.json({ error: "Failed to fetch blogs" }, { status: 500 });
+  } catch (err) {
+    console.error("❌ GET /api/blog Error:", err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

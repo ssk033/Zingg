@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Add } from "@/components/AddBlog";
+import  Add  from "@/components/AddBlog";
 import { Blogs } from "@/components/Blogs";
 
 export default function BlogsPage() {

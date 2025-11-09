@@ -1,7 +1,7 @@
 "use client";
 
 import Signup from "@/components/Signup";
-import Image from "next/image";  // 👉 add this
+import Image from "next/image";
 import { useEffect, useRef } from "react";
 
 export default function SignupPage() {
@@ -12,7 +12,7 @@ export default function SignupPage() {
     if (!grid) return;
 
     const handleHover = (e: MouseEvent) => {
-      const randomColor = `hsl(${Math.random() * 360}, 100%, 55%)`; // ⚡ BRIGHT NEON COLOR
+      const randomColor = `hsl(${Math.random() * 360}, 100%, 55%)`; // Neon color
       const target = e.target as HTMLElement;
 
       if (target.classList.contains("cell")) {
@@ -37,15 +37,15 @@ export default function SignupPage() {
   return (
     <div className="flex h-screen bg-black text-white overflow-hidden">
 
-      {/* LEFT SIDE FORM */}
+      {/* ✅ LEFT SIDE FORM */}
       <div className="w-1/2 flex items-center justify-center border-r border-gray-700">
-        <Signup />
+        <Signup /> {/* <-- yeh updated Signup component render karega */}
       </div>
 
-      {/* RIGHT SIDE INTERACTIVE GRID PANEL */}
+      {/* ✅ RIGHT GRID PANEL */}
       <div className="relative w-1/2 flex items-center justify-center">
 
-        {/* ✅ SUPER BRIGHT GRID */}
+        {/* 🔥 Neon Animated Grid */}
         <div
           ref={gridRef}
           className="absolute inset-0 grid grid-cols-12 grid-rows-12 opacity-70"
@@ -58,10 +58,9 @@ export default function SignupPage() {
           ))}
         </div>
 
-        {/* NEON SVG LOGO + TEXT */}
+        {/* ✅ Neon Logo + Text */}
         <div className="z-10 flex flex-col items-center gap-5 select-none">
 
-          {/* ✅ SVG inserted here */}
           <Image
             src="/icons/writing-svgrepo-com.svg"
             alt="writing logo"
@@ -82,7 +81,6 @@ export default function SignupPage() {
             Create <br /> Your Own Story
           </h1>
         </div>
-
       </div>
     </div>
   );

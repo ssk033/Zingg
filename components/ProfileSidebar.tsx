@@ -60,6 +60,7 @@ export default function ProfileSidebar({ name, username, totalBlogs }: SidebarPr
             Profile
           </h2>
 
+          {/* NAME */}
           <div className="mt-6 group">
             <p className="text-gray-400 text-sm group-hover:text-white transition-all">NAME</p>
             <p className="text-xl font-semibold group-hover:scale-[1.03] transition-all">
@@ -67,13 +68,22 @@ export default function ProfileSidebar({ name, username, totalBlogs }: SidebarPr
             </p>
           </div>
 
+          {/* ✅ USERNAME (LONG TEXT AUTO WRAPS) */}
           <div className="mt-6 group">
-            <p className="text-gray-400 text-sm group-hover:text-white transition-all">USERNAME</p>
-            <p className="text-xl font-semibold opacity-90 group-hover:opacity-100 group-hover:scale-[1.03] transition-all">
+            <p className="text-gray-400 text-sm group-hover:text-white transition-all">
+              USERNAME
+            </p>
+            <p
+              className="
+                text-xl font-semibold opacity-90 group-hover:opacity-100 group-hover:scale-[1.03] transition-all
+                break-words whitespace-normal leading-snug max-w-[200px]
+              "
+            >
               @{username}
             </p>
           </div>
 
+          {/* TOTAL BLOGS */}
           <div className="mt-6 group">
             <p className="text-gray-400 text-sm group-hover:text-white transition-all">TOTAL BLOGS</p>
             <p className="text-xl font-semibold group-hover:scale-[1.03] transition-all">
@@ -81,7 +91,7 @@ export default function ProfileSidebar({ name, username, totalBlogs }: SidebarPr
             </p>
           </div>
 
-          {/* ✅ WHITE GLASS BUTTON (matches Signup theme) */}
+          {/* ✅ WHITE GLASS BUTTON */}
           <button
             onClick={() => (window.location.href = "/blogs")}
             className="

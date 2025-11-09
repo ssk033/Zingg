@@ -2,10 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import  Add  from "@/components/AddBlog"; // ✅ IMPORT ADD BLOG MODAL
 
 export default function NavBar() {
   const router = useRouter();
   const [openSidebar, setOpenSidebar] = useState(false);
+
+  // ✅ modal ke liye state
+  const [openAddModal, setOpenAddModal] = useState(false);
 
   return (
     <>
@@ -18,17 +22,11 @@ export default function NavBar() {
             onClick={() => router.push("/")}
             className="flex items-center cursor-pointer group select-none"
           >
-            <div
-              className="
-                w-12 h-12 rounded-full flex items-center justify-center
-                bg-gradient-to-br from-[#e8e8e8] via-[#bfbfbf] to-[#5a5a5a]
-                shadow-[0_0_8px_rgba(0,0,0,0.4)]
-                group-hover:shadow-[0_0_14px_rgba(0,0,0,0.6)]
-                transition-all duration-300 group-hover:scale-105
-              "
-            >
-              <span className="text-black font-extrabold text-2xl">Z</span>
-            </div>
+            <img
+              src="/icons/Zschool.svg"
+              alt="Zingg Logo"
+              className="w-12 h-12 transition-all duration-300 group-hover:scale-110"
+            />
 
             <h1
               className="
@@ -40,19 +38,11 @@ export default function NavBar() {
               ZINGG
             </h1>
 
-            <svg
+            <img
+              src="/icons/bolt.svg"
+              alt="Bolt Icon"
               className="ml-2 h-7 w-7 transition-transform duration-300 group-hover:scale-110"
-              viewBox="0 0 24 24"
-            >
-              <defs>
-                <linearGradient id="zinggSilver" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#e6e6e6" />
-                  <stop offset="60%" stopColor="#bdbdbd" />
-                  <stop offset="100%" stopColor="#5a5a5a" />
-                </linearGradient>
-              </defs>
-              <path d="M13 2L3 14h7l-1 8 12-14h-7l1-6z" fill="url(#zinggSilver)" />
-            </svg>
+            />
           </div>
 
           {/* ================= NAV BUTTONS ================= */}
@@ -83,13 +73,13 @@ export default function NavBar() {
               Sign Up
             </button>
 
-            {/* ✅ PROFILE CIRCLE */}
-            <div
-              className="w-11 h-11 rounded-full bg-black text-white flex items-center justify-center cursor-pointer hover:scale-110 transition-all"
+            {/* ✅ PROFILE ICON */}
+            <img
+              src="/icons/prof.svg"
+              alt="Profile"
               onClick={() => setOpenSidebar(true)}
-            >
-              <span className="font-bold text-lg">S</span>
-            </div>
+              className="w-11 h-11 cursor-pointer hover:scale-110 transition-all"
+            />
           </div>
         </div>
       </nav>
@@ -102,7 +92,7 @@ export default function NavBar() {
         />
       )}
 
-      {/* ================= RIGHT SLIDING SIDEBAR (Same theme as Signup UI) ================= */}
+      {/* ================= RIGHT SLIDING SIDEBAR ================= */}
       <div
         className={`
           fixed top-0 right-0 h-full w-72 z-50
@@ -110,7 +100,7 @@ export default function NavBar() {
           ${openSidebar ? "translate-x-0" : "translate-x-full"}
         `}
       >
-        {/* Glass Background */}
+        {/* Glass Panel */}
         <div
           className="
             absolute inset-0
@@ -128,78 +118,70 @@ export default function NavBar() {
             Profile Menu
           </h2>
 
-         {/* ✅ VIEW PROFILE */}
-<button
-  onClick={() => {
-    setOpenSidebar(false);
-    router.push("/profile");
-  }}
-  className="
-    w-full py-3 rounded-lg font-medium
-    bg-white/10 border border-white/30 text-white
-    hover:bg-white hover:text-black hover:shadow-[0_0_25px_white]
-    transition-all duration-300
-    flex items-center gap-4 pl-4
-  "
->
-  <img src="/icons/profile.svg" className="w-6 h-6 opacity-90" />
-  <span>View Profile</span>
-</button>
+          {/* ✅ VIEW PROFILE */}
+          <button
+            onClick={() => {
+              setOpenSidebar(false);
+              router.push("/profile");
+            }}
+            className="w-full py-3 rounded-lg font-medium bg-white/10 border border-white/30 text-white
+            hover:bg-white hover:text-black hover:shadow-[0_0_25px_white] transition-all duration-300
+            flex items-center gap-4 pl-4"
+          >
+            <img src="/icons/profile.svg" className="w-6 h-6 opacity-90" />
+            <span>View Profile</span>
+          </button>
 
-{/* ✅ MY BLOGS */}
-<button
-  onClick={() => {
-    setOpenSidebar(false);
-    router.push("/blogs");
-  }}
-  className="
-    w-full py-3 rounded-lg font-medium
-    bg-white/10 border border-white/30 text-white
-    hover:bg-white hover:text-black hover:shadow-[0_0_25px_white]
-    transition-all duration-300
-    flex items-center gap-4 pl-4
-  "
->
-  <img src="/icons/blogs.svg" className="w-6 h-6 opacity-90" />
-  <span>My Blogs</span>
-</button>
+          {/* ✅ MY BLOGS */}
+          <button
+            onClick={() => {
+              setOpenSidebar(false);
+              router.push("/blogs");
+            }}
+            className="w-full py-3 rounded-lg font-medium bg-white/10 border border-white/30 text-white
+            hover:bg-white hover:text-black hover:shadow-[0_0_25px_white] transition-all duration-300
+            flex items-center gap-4 pl-4"
+          >
+            <img src="/icons/blogs.svg" className="w-6 h-6 opacity-90" />
+            <span>Blogs</span>
+          </button>
 
-{/* ✅ CREATE BLOG */}
-<button
-  onClick={() => {
-    setOpenSidebar(false);
-    router.push("/blogs");
-  }}
-  className="
-    w-full py-3 rounded-lg font-medium
-    bg-white/10 border border-white/30 text-white
-    hover:bg-white hover:text-black hover:shadow-[0_0_25px_white]
-    transition-all duration-300
-    flex items-center gap-4 pl-4
-  "
->
-  <img src="/icons/create.svg" className="w-6 h-6 opacity-90" />
-  <span>Create Blog</span>
-</button>
+          {/* ✅ CREATE BLOG → OPEN AddBlog MODAL */}
+          <button
+            onClick={() => {
+              setOpenSidebar(false);
+              setOpenAddModal(true);   // ✅ MODAL OPEN
+            }}
+            className="w-full py-3 rounded-lg font-medium bg-white/10 border border-white/30 text-white
+            hover:bg-white hover:text-black hover:shadow-[0_0_25px_white] transition-all duration-300
+            flex items-center gap-4 pl-4"
+          >
+            <img src="/icons/create.svg" className="w-6 h-6 opacity-90" />
+            <span>Create Blog</span>
+          </button>
 
-{/* ✅ LOGOUT */}
-<button
-  onClick={() => {
-    setOpenSidebar(false);
-    router.push("/api/auth/signout");
-  }}
-  className="
-    w-full py-3 rounded-lg font-medium
-    bg-red-600 hover:bg-red-500 transition-all duration-300
-    flex items-center gap-4 pl-4
-  "
->
-  <img src="/icons/logout.svg" className="w-6 h-6 opacity-90" />
-  <span>Logout</span>
-</button>
-
+          {/* ✅ LOGOUT */}
+          <button
+            onClick={() => {
+              setOpenSidebar(false);
+              router.push("/api/auth/signout");
+            }}
+            className="w-full py-3 rounded-lg font-medium bg-red-600 hover:bg-red-500 transition-all duration-300
+            flex items-center gap-4 pl-4"
+          >
+            <img src="/icons/logout.svg" className="w-6 h-6 opacity-90" />
+            <span>Logout</span>
+          </button>
         </div>
       </div>
+
+      {/* ✅ AddBlog MODAL OPEN FROM NAVBAR */}
+      {openAddModal && (
+        <Add
+          onClose={() => setOpenAddModal(false)}
+          onBlogAdded={() => console.log("Blog added ✅")}
+        />
+      )}
     </>
   );
 }
