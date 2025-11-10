@@ -36,7 +36,7 @@ export default function Home() {
         </h1>
 
         <p className="text-gray-300 text-lg sm:text-xl md:text-2xl mt-6 max-w-2xl">
-          Write like Medium. Express like Twitter. Build your personal audience.
+          Create Your Own Story. Let's rewrite the past, redesign the present, redefine the future.
         </p>
 
         {/* CTA BUTTON */}
