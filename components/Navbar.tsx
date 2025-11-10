@@ -2,97 +2,123 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import  Add  from "@/components/AddBlog"; // ✅ IMPORT ADD BLOG MODAL
+import Add from "@/components/AddBlog";
 
 export default function NavBar() {
   const router = useRouter();
   const [openSidebar, setOpenSidebar] = useState(false);
-
-  // ✅ modal ke liye state
   const [openAddModal, setOpenAddModal] = useState(false);
+  const [navVisible, setNavVisible] = useState(true);
 
   return (
     <>
       {/* ================= NAVBAR ================= */}
-      <nav className="w-full backdrop-blur-lg bg-white/70 border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-
+      <nav
+        className={`
+          fixed top-0 w-full z-50 transition-transform duration-500
+          ${navVisible ? "translate-y-0" : "-translate-y-full"}
+        `}
+      >
+        <div
+          className="
+            backdrop-blur-xl bg-[#0B0E10]/50
+            border-b border-[#27B4F5]/40
+            shadow-[0_0_25px_rgba(39,180,245,0.55)]
+            px-6 pt-4 pb-4 flex justify-between items-center
+          "
+        >
           {/* ================= LOGO ================= */}
           <div
             onClick={() => router.push("/")}
             className="flex items-center cursor-pointer group select-none"
           >
-            <img
-              src="/icons/Zschool.svg"
-              alt="Zingg Logo"
-              className="w-12 h-12 transition-all duration-300 group-hover:scale-110"
-            />
+            <img src="/icons/Zschool.svg" className="w-12 h-12 group-hover:scale-110 transition" />
 
-            <h1
-              className="
-                ml-4 text-[30px] font-extrabold tracking-wider
-                text-black transition-all duration-300 
-                group-hover:tracking-[0.35em]
-              "
-            >
-              ZINGG
-            </h1>
+           <h1
+  className="
+    ml-4 text-[30px] font-extrabold tracking-wider
+    transition-all duration-300 group-hover:tracking-[0.35em]
+  "
+  style={{
+    background: "linear-gradient(90deg, #ff005d, #ff8c00, #ffee00, #2aff00, #00eeff, #7a00ff, #ff00b8)",
+    backgroundSize: "400% 400%",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    animation: "rgbGlow 4s linear infinite",
+  }}
+>
+  ZINGG
+</h1>
 
-            <img
-              src="/icons/bolt.svg"
-              alt="Bolt Icon"
-              className="ml-2 h-7 w-7 transition-transform duration-300 group-hover:scale-110"
-            />
+
+            <img src="/icons/bolt.svg" className="ml-2 h-7 w-7 transition group-hover:scale-110" />
           </div>
 
           {/* ================= NAV BUTTONS ================= */}
           <div className="flex items-center space-x-6">
 
-            <button className="relative text-[17px] font-medium text-black group">
+            <button className="relative text-[17px] font-medium text-white group">
               Our Story
-              <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-black transition-all duration-300 group-hover:w-full" />
+              <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-[#27B4F5] transition-all duration-300 group-hover:w-full" />
             </button>
 
             <button
               onClick={() => router.push("/blogs")}
-              className="relative text-[17px] font-medium text-black group"
+              className="relative text-[17px] font-medium text-white group"
             >
               Blogs
-              <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-black transition-all duration-300 group-hover:w-full" />
+              <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-[#27B4F5] transition-all duration-300 group-hover:w-full" />
             </button>
 
-            {/* ✅ SIGN UP BUTTON */}
             <button
               onClick={() => router.push("/signup")}
               className="
-                bg-black text-white px-6 py-2 rounded-full font-semibold shadow-md
-                hover:bg-white hover:text-black hover:border-black border transition-all
+                bg-[#27B4F5]/20 border border-[#27B4F5]/70 text-[#27B4F5]
+                px-6 py-2 rounded-full font-semibold shadow-md
+                hover:bg-[#27B4F5] hover:text-black hover:border-black transition-all
                 duration-300 hover:-translate-y-[2px]
               "
             >
               Sign Up
             </button>
 
-            {/* ✅ PROFILE ICON */}
             <img
               src="/icons/prof.svg"
-              alt="Profile"
               onClick={() => setOpenSidebar(true)}
-              className="w-11 h-11 cursor-pointer hover:scale-110 transition-all"
+              className="w-10 h-10 cursor-pointer hover:scale-110 transition"
             />
           </div>
         </div>
+
+        {/* ✅ RGB ANIMATED LIGHT STRIP */}
+        <div className="h-[3px] w-full animate-rgbGlow" />
       </nav>
 
-      {/* ================= OVERLAY ================= */}
+      {/* ✅ PERFECTLY CENTERED BELOW NAVBAR TOGGLE BUTTON */}
+      <button
+        onClick={() => setNavVisible(!navVisible)}
+        className={`
+          fixed left-1/2 -translate-x-1/2 z-[999]
+          w-12 h-6 flex justify-center items-center
+          rounded-full backdrop-blur-xl
+          border border-[#27B4F5]/60 bg-[#27B4F5]/15
+          hover:bg-[#27B4F5]/40 transition-all duration-500
+          ${navVisible ? "top-[calc(64px+3px)]" : "top-3"}
+        `}
+      >
+        {navVisible ? (
+          <span className="text-[#27B4F5] text-lg font-bold">▲</span>
+        ) : (
+          <span className="text-[#27B4F5] text-lg font-bold">▼</span>
+        )}
+      </button>
+
+
+      {/* ================= OVERLAY & SIDEBAR ================= */}
       {openSidebar && (
-        <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
-          onClick={() => setOpenSidebar(false)}
-        />
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" onClick={() => setOpenSidebar(false)} />
       )}
 
-      {/* ================= RIGHT SLIDING SIDEBAR ================= */}
       <div
         className={`
           fixed top-0 right-0 h-full w-72 z-50
@@ -100,74 +126,53 @@ export default function NavBar() {
           ${openSidebar ? "translate-x-0" : "translate-x-full"}
         `}
       >
-        {/* Glass Panel */}
-        <div
-          className="
-            absolute inset-0
-            backdrop-blur-2xl bg-black/30
-            border-l border-white/30
-            shadow-[0_0_35px_rgba(255,255,255,0.4)]
-          "
-          style={{ WebkitBackdropFilter: "blur(30px)" }}
-        />
+        {/* blur glass */}
+        <div className="absolute inset-0 bg-black/30 backdrop-blur-2xl border-l border-white/30 shadow-[0_0_35px_rgba(255,255,255,0.4)]" />
 
-        {/* Sidebar Content */}
         <div className="relative z-10 p-6 space-y-7 text-white">
-
           <h2 className="text-3xl font-extrabold drop-shadow-[0_0_10px_white] mb-4">
             Profile Menu
           </h2>
 
-          {/* ✅ VIEW PROFILE */}
           <button
             onClick={() => {
               setOpenSidebar(false);
               router.push("/profile");
             }}
-            className="w-full py-3 rounded-lg font-medium bg-white/10 border border-white/30 text-white
-            hover:bg-white hover:text-black hover:shadow-[0_0_25px_white] transition-all duration-300
-            flex items-center gap-4 pl-4"
+            className="w-full py-3 rounded-lg font-medium bg-white/10 border border-white/30 text-white hover:bg-white hover:text-black hover:shadow-[0_0_25px_white] transition-all duration-300 flex items-center gap-4 pl-4"
           >
             <img src="/icons/profile.svg" className="w-6 h-6 opacity-90" />
             <span>View Profile</span>
           </button>
 
-          {/* ✅ MY BLOGS */}
           <button
             onClick={() => {
               setOpenSidebar(false);
               router.push("/blogs");
             }}
-            className="w-full py-3 rounded-lg font-medium bg-white/10 border border-white/30 text-white
-            hover:bg-white hover:text-black hover:shadow-[0_0_25px_white] transition-all duration-300
-            flex items-center gap-4 pl-4"
+            className="w-full py-3 rounded-lg font-medium bg-white/10 border border-white/30 text-white hover:bg-white hover:text-black hover:shadow-[0_0_25px_white] transition-all duration-300 flex items-center gap-4 pl-4"
           >
             <img src="/icons/blogs.svg" className="w-6 h-6 opacity-90" />
             <span>Blogs</span>
           </button>
 
-          {/* ✅ CREATE BLOG → OPEN AddBlog MODAL */}
           <button
             onClick={() => {
               setOpenSidebar(false);
-              setOpenAddModal(true);   // ✅ MODAL OPEN
+              setOpenAddModal(true);
             }}
-            className="w-full py-3 rounded-lg font-medium bg-white/10 border border-white/30 text-white
-            hover:bg-white hover:text-black hover:shadow-[0_0_25px_white] transition-all duration-300
-            flex items-center gap-4 pl-4"
+            className="w-full py-3 rounded-lg font-medium bg-white/10 border border-white/30 text-white hover:bg-white hover:text-black hover:shadow-[0_0_25px_white] transition-all duration-300 flex items-center gap-4 pl-4"
           >
             <img src="/icons/create.svg" className="w-6 h-6 opacity-90" />
             <span>Create Blog</span>
           </button>
 
-          {/* ✅ LOGOUT */}
           <button
             onClick={() => {
               setOpenSidebar(false);
               router.push("/api/auth/signout");
             }}
-            className="w-full py-3 rounded-lg font-medium bg-red-600 hover:bg-red-500 transition-all duration-300
-            flex items-center gap-4 pl-4"
+            className="w-full py-3 rounded-lg font-medium bg-red-600 hover:bg-red-500 transition-all duration-300 flex items-center gap-4 pl-4"
           >
             <img src="/icons/logout.svg" className="w-6 h-6 opacity-90" />
             <span>Logout</span>
@@ -175,12 +180,9 @@ export default function NavBar() {
         </div>
       </div>
 
-      {/* ✅ AddBlog MODAL OPEN FROM NAVBAR */}
+      {/* ✅ BLOG MODAL */}
       {openAddModal && (
-        <Add
-          onClose={() => setOpenAddModal(false)}
-          onBlogAdded={() => console.log("Blog added ✅")}
-        />
+        <Add onClose={() => setOpenAddModal(false)} onBlogAdded={() => console.log("Blog added ✅")} />
       )}
     </>
   );

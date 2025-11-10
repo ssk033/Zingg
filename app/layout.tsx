@@ -32,6 +32,7 @@ export default function RootLayout({
         {/* ✅ SessionProvider must wrap everything */}
         <SessionProvider>
           <NavBar />
+          
           {children}
         </SessionProvider>
       </body>

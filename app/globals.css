@@ -1,6 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "VeganStyle";
+  src: url("/fonts/VeganStyle.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MightySouly";
+  src: url("/fonts/MightySouly.ttf") format("truetype");
+  font-display: swap;
+}
+
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -27,8 +41,9 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem
+    --radius: 0.5rem;
   }
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -53,9 +68,10 @@
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%
+    --chart-5: 340 75% 55%;
   }
 }
+
 @layer base {
   * {
     @apply border-border;
@@ -65,3 +81,63 @@
   }
 }
 
+/* ===== RGB NAVBAR LIGHT STRIP ===== */
+
+@keyframes rgbGlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.animate-rgbGlow {
+  background: linear-gradient(
+    90deg,
+    #ff005d,
+    #ff8c00,
+    #ffee00,
+    #2aff00,
+    #00eeff,
+    #7a00ff,
+    #ff00b8
+  );
+  background-size: 400% 400%;
+  animation: rgbGlow 6s linear infinite;
+}
+/* 🚀 FINAL RGB BORDER (NO GLASS, NO BACKDROP-BLUR, TEXT ALWAYS VISIBLE) */
+.rgb-ring {
+  position: relative;
+  display: inline-block;
+  border-radius: 0.75rem; /* match rounded-2xl */
+  z-index: 1;
+}
+
+/* ✅ Animated RGB border */
+.rgb-ring::before {
+  content: "";
+  position: absolute;
+  inset: -4px;  /* border thickness */
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    #ff005d,
+    #ff8c00,
+    #ffee00,
+    #2aff00,
+    #00eeff,
+    #7a00ff,
+    #ff00b8
+  );
+  background-size: 400% 400%;
+  animation: rgbGlow 4s linear infinite;
+  z-index: -1;
+  filter: blur(1px); /* subtle neon glow */
+}
+
+/* ✅ Button inner area (solid color, NOT transparent) */
+.rgb-ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #27B4F5; /* solid fill so text remains visible */
+  z-index: -2;
+}
