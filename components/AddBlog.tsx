@@ -49,9 +49,10 @@ export default function Add({ onClose, onBlogAdded }: AddProps) {
         setTitle("");
         setContent("");
       }
-    } catch (error: any) {
-      console.log("❌ POST ERROR:", error?.response?.data || error?.message);
-      alert(error?.response?.data?.error || "Server error");
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { error?: string } }; message?: string };
+      console.log("❌ POST ERROR:", err?.response?.data || err?.message);
+      alert(err?.response?.data?.error || "Server error");
     } finally {
       setLoading(false);
     }

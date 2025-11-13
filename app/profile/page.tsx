@@ -76,7 +76,7 @@ export default async function ProfilePage() {
           <div className="mt-6 space-y-4">
             {user.blogs.length === 0 ? (
               <div className="p-6 rounded-xl border border-[#27B4F5]/20 bg-black/20 backdrop-blur-sm">
-                <p className="text-gray-500 italic text-center">You haven't posted any blogs yet.</p>
+                <p className="text-gray-500 italic text-center">You haven&apos;t posted any blogs yet.</p>
               </div>
             ) : (
               user.blogs.map((blog) => (

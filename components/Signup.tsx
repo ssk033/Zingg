@@ -26,8 +26,9 @@ export default function Signup() {
       });
 
       if (response.status === 201) router.push("/signin");
-    } catch (error: any) {
-      setErrorMsg(error.response?.data?.error || "Something went wrong");
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { error?: string } } };
+      setErrorMsg(err.response?.data?.error || "Something went wrong");
     } finally {
       setLoading(false);
     }

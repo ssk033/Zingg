@@ -135,7 +135,7 @@ export const Blogs = ({ blogs }: BlogsProps) => {
             ) : comments.length === 0 ? (
               <p className="text-gray-400 text-center mt-6 opacity-75">No comments yet...</p>
             ) : (
-              comments.map((comment: any, index) => (
+              comments.map((comment: { id?: string; text: string; createdAt: string; user?: { username?: string } }, index) => (
                 <div
                   key={comment.id || index}
                   className="

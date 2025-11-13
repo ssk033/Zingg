@@ -51,7 +51,7 @@ export const Blogcard = ({
     axios
       .post("/api/blog/like", { blogId })
       .then((res) => setLiked(!!res.data.liked))
-      .catch((err) => {
+      .catch(() => {
         setLiked((prev) => !prev);
         setLikes((prev) => (liked ? prev + 1 : prev - 1));
       });
@@ -225,7 +225,7 @@ export const Blogcard = ({
                   before:transition-transform before:duration-700
                 "
               >
-                <img src="/icons/comment.svg" className="w-5 h-5 relative z-10" />
+                <img src="/icons/comment.svg" alt="Comment" className="w-5 h-5 relative z-10" />
                 <span className="relative z-10">Comment</span>
               </button>
             </div>

@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ message: "Comment added" }, { status: 201 });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: "Server Error" }, { status: 500 });
   }
 }
@@ -39,7 +39,7 @@ export async function GET(req: Request) {
     });
 
     return NextResponse.json({ comments });
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: "Server Error" }, { status: 500 });
   }
 }

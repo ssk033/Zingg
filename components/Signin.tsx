@@ -189,7 +189,7 @@ export default function Signin() {
 
         {/* Enhanced link */}
         <p className="text-sm text-center mt-5 text-gray-300">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link 
             href="/signup" 
             className="

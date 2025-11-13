@@ -65,7 +65,7 @@ export const authOptions: NextAuthOptions = {
 
       async authorize(
         credentials: Record<"username" | "password", string> | undefined
-      ): Promise<any> {
+      ): Promise<{ id: string; name: string; email: string; image: string; username: string } | null> {
         if (!credentials?.username || !credentials.password) return null;
 
         const user = await prisma.user.findUnique({
@@ -89,7 +89,7 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
-     redirect({ url, baseUrl }) {
+     redirect() {
     return "/blogs";
   },
     async signIn({ user, account }) {
@@ -122,13 +122,13 @@ export const authOptions: NextAuthOptions = {
         }
 
         user.id = dbUser.id;
-        (user as any).username = dbUser.username;
+        (user as { id: string; username?: string }).username = dbUser.username;
       }
 
       return true;
     },
 
-    async session({ session, user }: any) {
+    async session({ session, user }: { session: { user?: { id?: string; username?: string; name?: string; email?: string; image?: string } }; user?: { id: string; username?: string; name?: string; email?: string; image?: string } }) {
       if (user) {
         session.user = {
           id: user.id,
