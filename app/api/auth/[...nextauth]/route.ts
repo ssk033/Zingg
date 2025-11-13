@@ -1,76 +1,54 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+// app/api/auth/[...nextauth]/route.ts
+import NextAuth, { type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
+const genUsername = (name: string) =>
+  name.replace(/\s+/g, "").toLowerCase() +
+  Math.floor(1000 + Math.random() * 9000);
+
 export const authOptions: NextAuthOptions = {
+  // ⭐ Important for localhost on Linux
+  useSecureCookies: false,
+
+  // ⭐ Forces Chrome/Linux/Fedora to accept cookies
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: false, // MUST be false for localhost
+      },
+    },
+    callbackUrl: {
+      name: "next-auth.callback-url",
+      options: { sameSite: "lax", path: "/", secure: false },
+    },
+    csrfToken: {
+      name: "next-auth.csrf-token",
+      options: { httpOnly: false, sameSite: "lax", path: "/", secure: false },
+    },
+  },
+
   adapter: PrismaAdapter(prisma),
 
+  // ⭐ database session required for PrismaAdapter
+  session: {
+    strategy: "database",
+  },
+
   providers: [
-    // ✅ GOOGLE LOGIN WITH AUTO USERNAME + ACCOUNT LINKING
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       allowDangerousEmailAccountLinking: true,
-
-      async profile(profile) {
-        let user = await prisma.user.findUnique({
-          where: { email: profile.email },
-        });
-
-        if (user) {
-          // ⭐ user exists but username null? → Assign username
-          if (!user.username) {
-            const newUsername =
-              (profile.name || "user").replace(/\s+/g, "").toLowerCase() +
-              Math.floor(1000 + Math.random() * 9000);
-
-            user = await prisma.user.update({
-              where: { id: user.id },
-              data: {
-                username: newUsername,
-                provider: "google",
-              },
-            });
-          }
-
-          return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            username: user.username!,
-            image: user.image,
-          };
-        }
-
-        // ⭐ No existing user → create new one
-        const randomUsername =
-          (profile.name || "user").replace(/\s+/g, "").toLowerCase() +
-          Math.floor(1000 + Math.random() * 9000);
-
-        const newUser = await prisma.user.create({
-          data: {
-            name: profile.name,
-            email: profile.email,
-            username: randomUsername,
-            image: profile.picture,
-            provider: "google",
-          },
-        });
-
-        return {
-          id: newUser.id,
-          name: newUser.name,
-          email: newUser.email,
-          username: newUser.username!,
-          image: newUser.image,
-        };
-      },
     }),
 
-    // ✅ CREDENTIALS LOGIN
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -78,7 +56,9 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
 
-      async authorize(credentials): Promise<any> {
+      async authorize(
+        credentials: Record<"username" | "password", string> | undefined
+      ): Promise<any> {
         if (!credentials?.username || !credentials.password) return null;
 
         const user = await prisma.user.findUnique({
@@ -87,47 +67,76 @@ export const authOptions: NextAuthOptions = {
 
         if (!user || !user.password) return null;
 
-        const validPass = await bcrypt.compare(
-          credentials.password,
-          user.password
-        );
-        if (!validPass) return null;
+        const match = await bcrypt.compare(credentials.password, user.password);
+        if (!match) return null;
 
         return {
           id: user.id,
-          name: user.name,
-          email: user.email,
-          username: user.username!,
-          image: user.image,
+          name: user.name ?? "",
+          email: user.email ?? "",
+          image: user.image ?? "",
+          username: user.username ?? "",
         };
       },
     }),
   ],
 
-  // ✅ JWT + SESSION CALLBACKS
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id; // string
-        token.username = (user as any).username;
+     redirect({ url, baseUrl }) {
+    return "/blogs";
+  },
+    async signIn({ user, account }) {
+      if (account?.provider === "google") {
+        let dbUser = await prisma.user.findUnique({
+          where: { email: user.email! },
+        });
+
+        // Link username + provider
+        if (dbUser && dbUser.provider !== "google") {
+          dbUser = await prisma.user.update({
+            where: { id: dbUser.id },
+            data: { provider: "google" },
+          });
+        }
+
+        // New Google user
+        if (!dbUser) {
+          dbUser = await prisma.user.create({
+            data: {
+              name: user.name ?? "",
+              email: user.email!,
+              username: genUsername(user.name ?? "user"),
+              image: user.image ?? "",
+              provider: "google",
+            },
+          });
+        }
+
+        user.id = dbUser.id;
+        (user as any).username = dbUser.username;
       }
-      return token;
+
+      return true;
     },
 
-    async session({ session, token }) {
-      session.user = {
-        id: String(token.id),
-        username: String(token.username),
-        name: session.user?.name ?? "",
-        email: session.user?.email ?? "",
-        image: session.user?.image ?? "",
-      };
+    async session({ session, user }: any) {
+      if (user) {
+        session.user = {
+          id: user.id,
+          username: user.username ?? "",
+          name: user.name ?? "",
+          email: user.email ?? "",
+          image: user.image ?? "",
+        };
+      }
       return session;
     },
   },
 
-  session: { strategy: "jwt" },
-  pages: { signIn: "/signin" },
+  pages: {
+    signIn: "/signin",
+  },
+
   secret: process.env.NEXTAUTH_SECRET!,
 };
 

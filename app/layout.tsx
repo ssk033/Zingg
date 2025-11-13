@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/Navbar";
-import SessionProvider from "./SessionProvider"; // ✅ import client wrapper
+import SessionProviderWrapper from "./SessionProvider";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,11 +31,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* ✅ SessionProvider must wrap everything */}
-        <SessionProvider>
-          <NavBar />
-          
-          {children}
-        </SessionProvider>
+       <SessionProviderWrapper>
+  <NavBar />
+  {children}
+</SessionProviderWrapper>
+
       </body>
     </html>
   );
