@@ -1,6 +1,7 @@
 // app/api/auth/[...nextauth]/route.ts
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import LinkedInProvider from "next-auth/providers/linkedin";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/lib/prisma";
@@ -49,6 +50,12 @@ export const authOptions: NextAuthOptions = {
       allowDangerousEmailAccountLinking: true,
     }),
 
+    LinkedInProvider({
+      clientId: process.env.LINKEDIN_CLIENT_ID || "",
+      clientSecret: process.env.LINKEDIN_CLIENT_SECRET || "",
+      allowDangerousEmailAccountLinking: true,
+    }),
+
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -86,20 +93,22 @@ export const authOptions: NextAuthOptions = {
     return "/blogs";
   },
     async signIn({ user, account }) {
-      if (account?.provider === "google") {
+      if (account?.provider === "google" || account?.provider === "linkedin") {
         let dbUser = await prisma.user.findUnique({
           where: { email: user.email! },
         });
 
+        const provider = account.provider;
+
         // Link username + provider
-        if (dbUser && dbUser.provider !== "google") {
+        if (dbUser && dbUser.provider !== provider) {
           dbUser = await prisma.user.update({
             where: { id: dbUser.id },
-            data: { provider: "google" },
+            data: { provider: provider },
           });
         }
 
-        // New Google user
+        // New OAuth user
         if (!dbUser) {
           dbUser = await prisma.user.create({
             data: {
@@ -107,7 +116,7 @@ export const authOptions: NextAuthOptions = {
               email: user.email!,
               username: genUsername(user.name ?? "user"),
               image: user.image ?? "",
-              provider: "google",
+              provider: provider,
             },
           });
         }

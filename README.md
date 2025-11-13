@@ -20,6 +20,32 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Environment Variables
+
+Create a `.env.local` file in the root directory and add the following variables:
+
+```env
+# NextAuth
+NEXTAUTH_SECRET=your-secret-key-here
+NEXTAUTH_URL=http://localhost:3000
+
+# Google OAuth (optional)
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+
+# LinkedIn OAuth (optional - just paste your keys here and it will work!)
+LINKEDIN_CLIENT_ID=your-linkedin-client-id
+LINKEDIN_CLIENT_SECRET=your-linkedin-client-secret
+```
+
+### LinkedIn Setup
+To enable LinkedIn login:
+1. Go to [LinkedIn Developers](https://www.linkedin.com/developers/apps)
+2. Create a new app
+3. Get your Client ID and Client Secret
+4. Add them to your `.env.local` file as shown above
+5. The LinkedIn login will automatically work once the keys are added!
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

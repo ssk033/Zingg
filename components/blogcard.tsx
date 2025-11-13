@@ -87,38 +87,43 @@ export const Blogcard = ({
           />
         </div>
 
-        {/* ⭐ Card */}
+        {/* ⭐ Premium Card */}
         <div
           className="
             border p-7 rounded-2xl
-            shadow-lg transition-transform duration-500
-            group-hover:shadow-[0_0_50px_rgba(39,180,245,0.8)]
-            group-hover:scale-[1.03]
+            backdrop-blur-[10px]
+            bg-gradient-to-br from-[#0B0E10]/90 via-[#0B0E10]/85 to-[#0B0E10]/90
+            border-[#27B4F5]/50
+            shadow-[0_0_30px_rgba(39,180,245,0.5),inset_0_1px_0_rgba(255,255,255,0.1)]
+            transition-all duration-500 ease-out
+            group-hover:shadow-[0_0_50px_rgba(39,180,245,0.8),inset_0_1px_0_rgba(255,255,255,0.15)]
+            group-hover:scale-[1.02] group-hover:border-[#27B4F5]
           "
-          style={{
-            backgroundColor: "#0B0E10",
-            borderColor: "#27B4F5",
-          }}
         >
 
-          {/* ================= HEADER ================= */}
+          {/* ================= PREMIUM HEADER ================= */}
           <div className="flex justify-between items-start relative">
 
             {/* LEFT → AUTHOR */}
             <div className="flex items-center space-x-4">
               <div
                 className="
-                  inline-flex items-center justify-center
-                  w-12 h-12 rounded-full bg-[#0B0E10]
+                  relative inline-flex items-center justify-center
+                  w-12 h-12 rounded-full 
+                  bg-gradient-to-br from-[#27B4F5]/20 to-[#27B4F5]/10
                   ring-2 ring-[#27B4F5]
                   shadow-[0_0_25px_rgba(39,180,245,0.6)]
+                  group-hover:shadow-[0_0_35px_rgba(39,180,245,0.9)]
+                  transition-all duration-300
                 "
               >
-                <span className="font-semibold text-white tracking-wide">
+                <span className="font-semibold text-[#27B4F5] tracking-wide">
                   {authorname.slice(0, 2).toUpperCase()}
                 </span>
               </div>
-              <div className="text-sm text-gray-300">{authorname}</div>
+              <div className="text-sm text-gray-300 font-medium group-hover:text-[#27B4F5] transition-colors">
+                {authorname}
+              </div>
             </div>
 
             {/* RIGHT → 3 DOTS MENU */}
@@ -162,13 +167,18 @@ export const Blogcard = ({
             </div>
           </div>
 
-          {/* ================= TITLE ================= */}
-          <h2 className="text-3xl font-bold text-white mt-5 group-hover:text-[#27B4F5] transition">
+          {/* ================= PREMIUM TITLE ================= */}
+          <h2 className="text-3xl font-bold text-white mt-5 
+            group-hover:text-[#27B4F5] 
+            drop-shadow-[0_0_10px_rgba(39,180,245,0.3)]
+            group-hover:drop-shadow-[0_0_20px_rgba(39,180,245,0.6)]
+            transition-all duration-300">
             {title}
           </h2>
 
-          {/* ================= CONTENT ================= */}
-          <p className="text-base text-gray-400 mt-3 line-clamp-3">
+          {/* ================= PREMIUM CONTENT ================= */}
+          <p className="text-base text-gray-400 mt-3 line-clamp-3 
+            group-hover:text-gray-300 transition-colors">
             {content}
           </p>
 
@@ -177,48 +187,61 @@ export const Blogcard = ({
             <div className="text-xs text-gray-500">{today}</div>
 
             <div className="flex items-center gap-3">
-              {/* ❤️ LIKE */}
+              {/* ❤️ PREMIUM LIKE */}
               <button
                 onClick={toggleLike}
                 className={`
+                  relative overflow-hidden
                   flex items-center gap-2 px-5 py-2 text-sm font-semibold rounded-lg border
+                  transition-all duration-300 ease-out
                   ${
                     liked
-                      ? "bg-[#27B4F5] text-black shadow-[0_0_20px_rgba(39,180,245,0.8)] border-transparent"
-                      : "bg-[#0B0E10] text-gray-200 border-[#27B4F5] hover:bg-[#27B4F5] hover:text-black"
+                      ? "bg-[#27B4F5] text-black shadow-[0_0_20px_rgba(39,180,245,0.8)] border-transparent hover:shadow-[0_0_30px_rgba(39,180,245,1)]"
+                      : "bg-black/20 backdrop-blur-sm text-gray-200 border-[#27B4F5]/50 hover:bg-[#27B4F5] hover:text-black hover:border-[#27B4F5] hover:shadow-[0_0_20px_rgba(39,180,245,0.6)]"
                   }
+                  hover:scale-105 active:scale-95
                 `}
               >
-                {liked ? "❤️ Liked" : "🤍 Like"} ({likes})
+                <span className="relative z-10">
+                  {liked ? "❤️ Liked" : "🤍 Like"} ({likes})
+                </span>
               </button>
 
-              {/* 💬 COMMENT SVG BUTTON */}
+              {/* 💬 PREMIUM COMMENT BUTTON */}
               <button
                 onClick={() => setCommentOpen(true)}
                 className="
+                  relative overflow-hidden
                   flex items-center gap-2 px-5 py-2 text-sm font-semibold rounded-lg
-                  border border-[#27B4F5] text-gray-200
-                  hover:bg-[#27B4F5] hover:text-black transition
+                  border border-[#27B4F5]/50 text-gray-200
+                  bg-black/20 backdrop-blur-sm
+                  hover:bg-[#27B4F5] hover:text-black hover:border-[#27B4F5]
+                  hover:shadow-[0_0_20px_rgba(39,180,245,0.6)]
+                  transition-all duration-300 ease-out
+                  hover:scale-105 active:scale-95
+                  before:absolute before:inset-0 before:bg-gradient-to-r
+                  before:from-transparent before:via-white/10 before:to-transparent
+                  before:translate-x-[-100%] hover:before:translate-x-[100%]
+                  before:transition-transform before:duration-700
                 "
               >
-                <img src="/icons/comment.svg" className="w-5 h-5" />
-                Comment
+                <img src="/icons/comment.svg" className="w-5 h-5 relative z-10" />
+                <span className="relative z-10">Comment</span>
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ================= COMMENT MODAL ================= */}
+      {/* ================= PREMIUM COMMENT MODAL ================= */}
       {commentOpen && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex justify-center items-center z-50">
           <div
-            className="p-8 rounded-xl w-[450px]"
-            style={{
-              backgroundColor: "#0B0E10",
-              border: "1px solid #27B4F5",
-              boxShadow: "0 0 45px rgba(39,180,245,0.5)",
-            }}
+            className="p-8 rounded-2xl w-[450px]
+            backdrop-blur-[20px]
+            bg-gradient-to-br from-[#0B0E10]/90 via-[#0B0E10]/85 to-[#0B0E10]/90
+            border border-[#27B4F5]/50
+            shadow-[0_0_45px_rgba(39,180,245,0.6),inset_0_1px_0_rgba(255,255,255,0.1)]"
           >
             <h2 className="text-2xl font-bold text-white">Add Comment 💬</h2>
 
