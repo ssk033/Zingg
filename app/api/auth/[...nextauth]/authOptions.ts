@@ -122,7 +122,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         user.id = dbUser.id;
-        (user as { id: string; username?: string }).username = dbUser.username;
+        (user as { id: string; username?: string }).username = dbUser.username ?? undefined;
       }
 
       return true;
