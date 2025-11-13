@@ -128,14 +128,14 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
 
-    async session({ session, user }: { session: { user?: { id?: string; username?: string; name?: string; email?: string; image?: string } }; user?: { id: string; username?: string; name?: string; email?: string; image?: string } }) {
+    async session({ session, user }: { session: { user?: { id?: string; username?: string; name?: string; email?: string; image?: string } }; user?: { id: string; username?: string | null; name?: string | null; email?: string | null; image?: string | null } }) {
       if (user) {
         session.user = {
           id: user.id,
-          username: user.username ?? "",
-          name: user.name ?? "",
-          email: user.email ?? "",
-          image: user.image ?? "",
+          username: user.username ?? undefined,
+          name: user.name ?? undefined,
+          email: user.email ?? undefined,
+          image: user.image ?? undefined,
         };
       }
       return session;
