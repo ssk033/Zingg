@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { CometCard } from "@/components/ui/comet-card";
+import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 
 export default function Home() {
 
@@ -22,19 +23,10 @@ export default function Home() {
 
       {/* HERO SECTION */}
       <section className="relative flex flex-col items-center justify-center text-center pt-36 pb-28 px-6 select-none overflow-visible z-10">
-        {/* ⭐ MAIN HEADING USING MIGHTYSOULY FONT */}
-        <h1
-          style={{ fontFamily: "MightySouly" }}
-          className="
-            text-5xl sm:text-6xl md:text-7xl lg:text-8xl
-            text-[#27B4F5]
-            tracking-[0.15em]
-            drop-shadow-[0_0_25px_#27B4F5]
-            transition-all duration-500
-          "
-        >
-          Welcome to ZINGG
-        </h1>
+        {/* ⭐ Text Hover Effect with ZINGG */}
+        <div className="h-[40rem] flex items-center justify-center w-full">
+          <TextHoverEffect text="ZINGG" />
+        </div>
 
         <p className="text-gray-300 text-lg sm:text-xl md:text-2xl mt-6 max-w-2xl relative z-10">
           Create Your Own Story. Let&apos;s rewrite the past, redesign the present, redefine the future.
