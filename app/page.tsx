@@ -1,9 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 import { CometCard } from "@/components/ui/comet-card";
-import { BackgroundLines } from "@/components/ui/background-lines";
 
 export default function Home() {
 
@@ -24,12 +22,19 @@ export default function Home() {
 
       {/* HERO SECTION */}
       <section className="relative flex flex-col items-center justify-center text-center pt-36 pb-28 px-6 select-none overflow-visible z-10">
-        {/* ⭐ Background Lines with Text Hover Effect - ZINGG */}
-        <BackgroundLines className="flex items-center justify-center w-full flex-col px-4 h-[40rem]">
-          <div className="relative z-20">
-            <TextHoverEffect text="ZINGG" />
-          </div>
-        </BackgroundLines>
+        {/* ⭐ MAIN HEADING USING MIGHTYSOULY FONT */}
+        <h1
+          style={{ fontFamily: "MightySouly" }}
+          className="
+            text-5xl sm:text-6xl md:text-7xl lg:text-8xl
+            text-[#27B4F5]
+            tracking-[0.15em]
+            drop-shadow-[0_0_25px_#27B4F5]
+            transition-all duration-500
+          "
+        >
+          Welcome to ZINGG
+        </h1>
 
         <p className="text-gray-300 text-lg sm:text-xl md:text-2xl mt-6 max-w-2xl relative z-10">
           Create Your Own Story. Let&apos;s rewrite the past, redesign the present, redefine the future.
