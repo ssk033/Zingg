@@ -74,6 +74,17 @@ export const authOptions: NextAuthOptions = {
             authorization: {
               params: {
                 scope: "openid profile email",
+                response_type: "code",
+              },
+            },
+            token: {
+              async request(context) {
+                const tokens = await context.client.oauthCallback(
+                  context.provider.callbackUrl,
+                  context.params,
+                  context.checks
+                );
+                return { tokens };
               },
             },
             allowDangerousEmailAccountLinking: true,
