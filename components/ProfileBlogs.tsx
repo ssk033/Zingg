@@ -8,7 +8,7 @@ import { Dialog } from "./Dialog";
 type Blog = {
   id: number;
   title: string;
-  createdAt: string | null;
+  createdAt: Date | string | null;
 };
 
 type ProfileBlogsProps = {
@@ -102,7 +102,11 @@ export default function ProfileBlogs({ blogs: initialBlogs }: ProfileBlogsProps)
                   {blog.title}
                 </h3>
                 <p className="text-sm text-gray-400 mt-2">
-                  {blog.createdAt ? new Date(blog.createdAt).toLocaleDateString("en-IN") : ""}
+                  {blog.createdAt 
+                    ? (blog.createdAt instanceof Date 
+                        ? blog.createdAt.toLocaleDateString("en-IN")
+                        : new Date(blog.createdAt).toLocaleDateString("en-IN"))
+                    : ""}
                 </p>
               </div>
               <button
