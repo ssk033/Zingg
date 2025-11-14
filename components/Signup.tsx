@@ -10,6 +10,7 @@ export default function Signup() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,6 +23,7 @@ export default function Signup() {
       const response = await axios.post("/api/user", {
         name,
         username,
+        email,
         password,
       });
 
@@ -105,6 +107,31 @@ export default function Signup() {
             placeholder="Pick a username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            className="
+              w-full p-3 rounded-lg outline-none text-white placeholder:text-gray-500
+              bg-black/20 backdrop-blur-sm
+              border border-[#27B4F5]/40
+              focus:border-[#27B4F5] focus:shadow-[0_0_20px_#27B4F5,inset_0_0_20px_#27B4F5/10]
+              focus:bg-black/30
+              transition-all duration-300 ease-out
+              hover:border-[#27B4F5]/60
+            "
+          />
+          <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-[#27B4F5]/0 via-[#27B4F5]/0 to-[#27B4F5]/0 
+            group-focus-within:from-[#27B4F5]/10 group-focus-within:via-[#27B4F5]/5 group-focus-within:to-[#27B4F5]/10
+            pointer-events-none transition-all duration-500 -z-10 blur-sm" />
+        </div>
+
+        {/* EMAIL */}
+        <label className="block mt-4 mb-2 text-sm font-semibold text-[#27B4F5] drop-shadow-[0_0_8px_#27B4F5/50]">
+          Email
+        </label>
+        <div className="relative group">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="
               w-full p-3 rounded-lg outline-none text-white placeholder:text-gray-500
               bg-black/20 backdrop-blur-sm
