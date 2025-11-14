@@ -19,7 +19,7 @@ type BlogsProps = {
   onBlogDeleted?: () => void;
 };
 
-export const Blogs = ({ blogs }: BlogsProps) => {
+export const Blogs = ({ blogs, onBlogDeleted }: BlogsProps) => {
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [comments, setComments] = useState([]);
   const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);

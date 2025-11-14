@@ -73,9 +73,14 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "Blog ID is required" }, { status: 400 });
     }
 
+    const blogIdNum = Number(blogId);
+    if (isNaN(blogIdNum)) {
+      return NextResponse.json({ error: "Invalid blog ID" }, { status: 400 });
+    }
+
     // Check if blog exists and user is the author
     const blog = await prisma.blog.findUnique({
-      where: { id: Number(blogId) },
+      where: { id: blogIdNum },
     });
 
     if (!blog) {
@@ -86,14 +91,28 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "You can only delete your own blogs" }, { status: 403 });
     }
 
-    // Delete the blog (cascade will handle related likes and comments)
+    // Delete related records first (likes and comments)
+    // This is necessary because schema doesn't have cascade delete
+    await prisma.like.deleteMany({
+      where: { blogId: blogIdNum },
+    });
+
+    await prisma.comment.deleteMany({
+      where: { blogId: blogIdNum },
+    });
+
+    // Now delete the blog
     await prisma.blog.delete({
-      where: { id: Number(blogId) },
+      where: { id: blogIdNum },
     });
 
     return NextResponse.json({ message: "Blog deleted successfully" }, { status: 200 });
-  } catch (err) {
+  } catch (err: any) {
     console.error("❌ DELETE /api/blog Error:", err);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    const errorMessage = err?.message || "Server error";
+    return NextResponse.json(
+      { error: errorMessage },
+      { status: 500 }
+    );
   }
 }

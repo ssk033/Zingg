@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { Dialog } from "./Dialog";
 
 interface BlogCardProps {
   blogId: number;
@@ -42,6 +43,21 @@ export const Blogcard = ({
   // Menu state for hover popup
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // Dialog state
+  const [dialog, setDialog] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: "alert" | "confirm";
+    onConfirm?: () => void;
+    onCancel?: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "alert",
+  });
+
   // ✅ check already liked
   useEffect(() => {
     axios
@@ -75,21 +91,49 @@ export const Blogcard = ({
       .then(() => {
         setCommentText("");
         setCommentOpen(false);
-        alert("✅ Comment added!");
+        setDialog({
+          isOpen: true,
+          title: "Success",
+          message: "✅ Comment added!",
+          type: "alert",
+          onConfirm: () => setDialog((prev) => ({ ...prev, isOpen: false })),
+        });
       });
   };
 
-  const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this blog?")) return;
-
-    try {
-      await axios.delete(`/api/blog?blogId=${blogId}`);
-      alert("✅ Blog deleted successfully!");
-      if (onDeleteBlog) onDeleteBlog();
-    } catch (error) {
-      const err = error as { response?: { data?: { error?: string } } };
-      alert(err?.response?.data?.error || "Failed to delete blog");
-    }
+  const handleDelete = () => {
+    setDialog({
+      isOpen: true,
+      title: "Delete Blog",
+      message: "Are you sure you want to delete this blog?",
+      type: "confirm",
+      onConfirm: async () => {
+        setDialog((prev) => ({ ...prev, isOpen: false }));
+        try {
+          await axios.delete(`/api/blog?blogId=${blogId}`);
+          setDialog({
+            isOpen: true,
+            title: "Success",
+            message: "✅ Blog deleted successfully!",
+            type: "alert",
+            onConfirm: () => {
+              setDialog((prev) => ({ ...prev, isOpen: false }));
+              if (onDeleteBlog) onDeleteBlog();
+            },
+          });
+        } catch (error) {
+          const err = error as { response?: { data?: { error?: string } } };
+          setDialog({
+            isOpen: true,
+            title: "Error",
+            message: err?.response?.data?.error || "Failed to delete blog",
+            type: "alert",
+            onConfirm: () => setDialog((prev) => ({ ...prev, isOpen: false })),
+          });
+        }
+      },
+      onCancel: () => setDialog((prev) => ({ ...prev, isOpen: false })),
+    });
   };
 
   return (
@@ -308,6 +352,18 @@ export const Blogcard = ({
           </div>
         </div>
       )}
+
+      {/* Dialog */}
+      <Dialog
+        isOpen={dialog.isOpen}
+        title={dialog.title}
+        message={dialog.message}
+        type={dialog.type}
+        onConfirm={dialog.onConfirm}
+        onCancel={dialog.onCancel}
+        confirmText={dialog.type === "confirm" ? "Delete" : "OK"}
+        cancelText="Cancel"
+      />
     </>
   );
 };

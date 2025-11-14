@@ -3,6 +3,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import { Dialog } from "./Dialog";
 
 type AddProps = {
   onClose: () => void;
@@ -15,6 +16,18 @@ export default function Add({ onClose, onBlogAdded }: AddProps) {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [dialog, setDialog] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: "alert" | "confirm";
+    onConfirm?: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "alert",
+  });
 
   const handleClose = () => {
     setIsClosing(true);
@@ -23,12 +36,24 @@ export default function Add({ onClose, onBlogAdded }: AddProps) {
 
   const handlePost = async () => {
     if (!title.trim() || !content.trim()) {
-      alert("Title and Content are required");
+      setDialog({
+        isOpen: true,
+        title: "Required Fields",
+        message: "Title and Content are required",
+        type: "alert",
+        onConfirm: () => setDialog((prev) => ({ ...prev, isOpen: false })),
+      });
       return;
     }
 
     if (!session?.user?.id) {
-      alert("You must be logged in to post a blog.");
+      setDialog({
+        isOpen: true,
+        title: "Authentication Required",
+        message: "You must be logged in to post a blog.",
+        type: "alert",
+        onConfirm: () => setDialog((prev) => ({ ...prev, isOpen: false })),
+      });
       return;
     }
 
@@ -52,7 +77,13 @@ export default function Add({ onClose, onBlogAdded }: AddProps) {
     } catch (error: unknown) {
       const err = error as { response?: { data?: { error?: string } }; message?: string };
       console.log("❌ POST ERROR:", err?.response?.data || err?.message);
-      alert(err?.response?.data?.error || "Server error");
+      setDialog({
+        isOpen: true,
+        title: "Error",
+        message: err?.response?.data?.error || "Server error",
+        type: "alert",
+        onConfirm: () => setDialog((prev) => ({ ...prev, isOpen: false })),
+      });
     } finally {
       setLoading(false);
     }
@@ -114,6 +145,16 @@ export default function Add({ onClose, onBlogAdded }: AddProps) {
           </button>
         )}
       </div>
+
+      {/* Dialog */}
+      <Dialog
+        isOpen={dialog.isOpen}
+        title={dialog.title}
+        message={dialog.message}
+        type={dialog.type}
+        onConfirm={dialog.onConfirm}
+        confirmText="OK"
+      />
     </div>
   );
 }

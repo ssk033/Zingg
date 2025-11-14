@@ -3,6 +3,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { Dialog } from "./Dialog";
 
 type Blog = {
   id: number;
@@ -17,19 +18,54 @@ type ProfileBlogsProps = {
 export default function ProfileBlogs({ blogs: initialBlogs }: ProfileBlogsProps) {
   const router = useRouter();
   const [blogs, setBlogs] = useState(initialBlogs);
+  const [dialog, setDialog] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: "alert" | "confirm";
+    onConfirm?: () => void;
+    onCancel?: () => void;
+  }>({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "alert",
+  });
 
-  const handleDelete = async (blogId: number) => {
-    if (!confirm("Are you sure you want to delete this blog?")) return;
-
-    try {
-      await axios.delete(`/api/blog?blogId=${blogId}`);
-      setBlogs(blogs.filter((blog) => blog.id !== blogId));
-      alert("✅ Blog deleted successfully!");
-      router.refresh();
-    } catch (error) {
-      const err = error as { response?: { data?: { error?: string } } };
-      alert(err?.response?.data?.error || "Failed to delete blog");
-    }
+  const handleDelete = (blogId: number) => {
+    setDialog({
+      isOpen: true,
+      title: "Delete Blog",
+      message: "Are you sure you want to delete this blog?",
+      type: "confirm",
+      onConfirm: async () => {
+        setDialog((prev) => ({ ...prev, isOpen: false }));
+        try {
+          await axios.delete(`/api/blog?blogId=${blogId}`);
+          setBlogs(blogs.filter((blog) => blog.id !== blogId));
+          setDialog({
+            isOpen: true,
+            title: "Success",
+            message: "✅ Blog deleted successfully!",
+            type: "alert",
+            onConfirm: () => {
+              setDialog((prev) => ({ ...prev, isOpen: false }));
+              router.refresh();
+            },
+          });
+        } catch (error) {
+          const err = error as { response?: { data?: { error?: string } } };
+          setDialog({
+            isOpen: true,
+            title: "Error",
+            message: err?.response?.data?.error || "Failed to delete blog",
+            type: "alert",
+            onConfirm: () => setDialog((prev) => ({ ...prev, isOpen: false })),
+          });
+        }
+      },
+      onCancel: () => setDialog((prev) => ({ ...prev, isOpen: false })),
+    });
   };
 
   return (
@@ -86,6 +122,18 @@ export default function ProfileBlogs({ blogs: initialBlogs }: ProfileBlogsProps)
           </div>
         ))
       )}
+
+      {/* Dialog */}
+      <Dialog
+        isOpen={dialog.isOpen}
+        title={dialog.title}
+        message={dialog.message}
+        type={dialog.type}
+        onConfirm={dialog.onConfirm}
+        onCancel={dialog.onCancel}
+        confirmText={dialog.type === "confirm" ? "Delete" : "OK"}
+        cancelText="Cancel"
+      />
     </div>
   );
 }

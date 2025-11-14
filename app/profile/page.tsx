@@ -37,7 +37,7 @@ export default async function ProfilePage() {
       {/* ✅ Sidebar (NO onToggle prop now) */}
       <ProfileSidebar
         name={user.name ?? ""}
-        username={user.username}
+        username={user.username ?? ""}
         totalBlogs={user.blogs.length}
       />
 
@@ -65,7 +65,7 @@ export default async function ProfilePage() {
             Welcome, {user.name}
           </h1>
 
-          <p className="text-gray-400 mt-2 text-lg font-medium">@{user.username}</p>
+          <p className="text-gray-400 mt-2 text-lg font-medium">@{user.username ?? "unknown"}</p>
 
           <h2 className="text-2xl mt-10 font-semibold 
             bg-gradient-to-r from-[#27B4F5] to-[#00eeff]
