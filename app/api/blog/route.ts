@@ -107,9 +107,9 @@ export async function DELETE(req: Request) {
     });
 
     return NextResponse.json({ message: "Blog deleted successfully" }, { status: 200 });
-  } catch (err: any) {
+  } catch (err) {
     console.error("❌ DELETE /api/blog Error:", err);
-    const errorMessage = err?.message || "Server error";
+    const errorMessage = err instanceof Error ? err.message : "Server error";
     return NextResponse.json(
       { error: errorMessage },
       { status: 500 }
