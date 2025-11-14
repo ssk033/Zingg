@@ -2,8 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { CometCard } from "@/components/ui/comet-card";
 import { TextHoverEffect } from "@/components/ui/text-hover-effect";
+import { CometCard } from "@/components/ui/comet-card";
 
 export default function Home() {
   const gridRef = useRef<HTMLDivElement>(null);
