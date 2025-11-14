@@ -74,17 +74,6 @@ export const authOptions: NextAuthOptions = {
             authorization: {
               params: {
                 scope: "openid profile email",
-                response_type: "code",
-              },
-            },
-            token: {
-              async request(context) {
-                const tokens = await context.client.oauthCallback(
-                  context.provider.callbackUrl,
-                  context.params,
-                  context.checks
-                );
-                return { tokens };
               },
             },
             allowDangerousEmailAccountLinking: true,
@@ -126,6 +115,10 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async redirect({ url, baseUrl }) {
+      // If redirecting to signin page, go to blogs instead
+      if (url.includes("/signin") || url === baseUrl || url === `${baseUrl}/`) {
+        return `${baseUrl}/blogs`;
+      }
       // Allow relative callback URLs
       if (url.startsWith("/")) return `${baseUrl}${url}`;
       // Allow callback URLs on the same origin

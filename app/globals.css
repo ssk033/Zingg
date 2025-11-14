@@ -204,3 +204,12 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(39, 180, 245, 0.6);
 }
+
+/* ===== COMET CARD PERSPECTIVE ===== */
+.perspective-distant {
+  perspective: 1000px;
+}
+
+.transform-3d {
+  transform-style: preserve-3d;
+}

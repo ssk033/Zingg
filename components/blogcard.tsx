@@ -42,6 +42,11 @@ export const Blogcard = ({
 
   // Menu state for hover popup
   const [menuOpen, setMenuOpen] = useState(false);
+  
+  // Full content view state
+  const [showFullContent, setShowFullContent] = useState(false);
+  const contentLength = content.length;
+  const shouldTruncate = contentLength > 150;
 
   // Dialog state
   const [dialog, setDialog] = useState<{
@@ -216,6 +221,18 @@ export const Blogcard = ({
                 >
                   <button
                     onClick={() => {
+                      setShowFullContent(true);
+                      setMenuOpen(false);
+                    }}
+                    className="
+                      w-full text-left px-3 py-2 rounded-lg text-gray-200
+                      hover:bg-[#27B4F5] hover:text-black transition mb-1
+                    "
+                  >
+                    {showFullContent ? 'Show Less' : 'Read Full Blog 📖'}
+                  </button>
+                  <button
+                    onClick={() => {
                       onViewComments();
                       setMenuOpen(false); // auto close
                     }}
@@ -255,10 +272,21 @@ export const Blogcard = ({
           </h2>
 
           {/* ================= PREMIUM CONTENT ================= */}
-          <p className="text-base text-gray-400 mt-3 line-clamp-3 
-            group-hover:text-gray-300 transition-colors">
-            {content}
-          </p>
+          <div className="mt-3">
+            <p className={`text-base text-gray-400 group-hover:text-gray-300 transition-colors ${
+              !showFullContent && shouldTruncate ? 'line-clamp-3' : ''
+            }`}>
+              {content}
+            </p>
+            {shouldTruncate && (
+              <button
+                onClick={() => setShowFullContent(!showFullContent)}
+                className="mt-2 text-[#27B4F5] hover:text-[#00eeff] text-sm font-semibold transition-colors"
+              >
+                {showFullContent ? 'Show Less' : 'Read More...'}
+              </button>
+            )}
+          </div>
 
           {/* ================= FOOTER ================= */}
           <div className="mt-6 flex justify-between items-center">

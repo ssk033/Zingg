@@ -25,8 +25,9 @@ export default function Signin() {
     if (res?.error) {
       setErrorMsg("Invalid username or password");
       setLoading(false);
-    } else {
+    } else if (res?.ok) {
       router.push("/blogs");
+      router.refresh();
     }
   };
 

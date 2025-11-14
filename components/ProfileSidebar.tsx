@@ -108,11 +108,11 @@ export default function ProfileSidebar({ name, username, totalBlogs, onToggle }:
         />
       )}
 
-      {/* Sidebar Toggle Button - Above navbar */}
+      {/* Sidebar Toggle Button - Below navbar */}
       <button
         onClick={toggleSidebar}
         className="
-          fixed z-[51]
+          fixed z-[49]
           p-2.5 rounded-full font-bold
           text-[#27B4F5]
           backdrop-blur-xl bg-[#0B0E10]/70
@@ -124,7 +124,7 @@ export default function ProfileSidebar({ name, username, totalBlogs, onToggle }:
           left-4
         "
         style={{
-          top: isMobile ? '1rem' : `${navbarHeight + 8}px`,
+          top: isMobile ? '1rem' : `${navbarHeight + 12}px`,
         }}
         aria-label={open ? "Close sidebar" : "Open sidebar"}
       >
@@ -145,6 +145,7 @@ export default function ProfileSidebar({ name, username, totalBlogs, onToggle }:
         style={{
           top: isMobile ? '0' : `${navbarHeight}px`,
           height: isMobile ? '100vh' : `calc(100vh - ${navbarHeight}px)`,
+          marginTop: isMobile ? '0' : '0',
         }}
       >
         {/* Glassmorphic Background */}

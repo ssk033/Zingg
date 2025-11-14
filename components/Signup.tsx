@@ -27,7 +27,21 @@ export default function Signup() {
         password,
       });
 
-      if (response.status === 201) router.push("/signin");
+      if (response.status === 201) {
+        // Auto sign in after successful signup
+        const signInResult = await signIn("credentials", {
+          redirect: false,
+          username,
+          password,
+        });
+
+        if (signInResult?.ok) {
+          router.push("/blogs");
+          router.refresh();
+        } else {
+          router.push("/signin");
+        }
+      }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { error?: string } } };
       setErrorMsg(err.response?.data?.error || "Something went wrong");
