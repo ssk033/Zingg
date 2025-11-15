@@ -38,15 +38,17 @@ export async function POST(req: Request) {
       );
     }
 
-    // TODO: Implement file upload to storage (S3, Cloudinary, etc.)
-    // For now, files are accepted but not stored
-    // You'll need to:
-    // 1. Add a mediaUrls field to Blog model (String[] or JSON)
-    // 2. Upload files to storage service
-    // 3. Store the URLs in the database
+    // Convert files to base64 data URLs for storage
+    const mediaUrls: string[] = [];
     if (files.length > 0) {
-      console.log(`📎 Received ${files.length} file(s) for blog`);
-      // Example: files.forEach(file => console.log(file.name, file.type, file.size));
+      for (const file of files) {
+        const arrayBuffer = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const base64 = buffer.toString("base64");
+        const dataUrl = `data:${file.type};base64,${base64}`;
+        mediaUrls.push(dataUrl);
+      }
+      console.log(`📎 Processed ${files.length} file(s) for blog`);
     }
 
     const blog = await prisma.blog.create({
@@ -54,10 +56,11 @@ export async function POST(req: Request) {
         title,
         content,
         authorID,
+        mediaUrls,
       },
     });
 
-    return NextResponse.json({ ...blog, filesReceived: files.length }, { status: 201 });
+    return NextResponse.json(blog, { status: 201 });
   } catch (err) {
     console.error("❌ POST /api/blog Error:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

@@ -12,6 +12,7 @@ interface BlogCardProps {
   title: string;
   content: string;
   initialLikes: number;
+  mediaUrls?: string[];
   onViewComments: () => void;
   onDeleteBlog?: () => void;
 }
@@ -23,6 +24,7 @@ export const Blogcard = ({
   title,
   content,
   initialLikes,
+  mediaUrls = [],
   onViewComments,
   onDeleteBlog,
 }: BlogCardProps) => {
@@ -285,6 +287,43 @@ export const Blogcard = ({
               >
                 {showFullContent ? 'Show Less' : 'Read More...'}
               </button>
+            )}
+            
+            {/* Media Display - Images and Videos */}
+            {mediaUrls && mediaUrls.length > 0 && (
+              <div className={`mt-4 grid gap-2 ${
+                mediaUrls.length === 1 ? 'grid-cols-1' : 
+                mediaUrls.length === 2 ? 'grid-cols-2' : 
+                'grid-cols-2'
+              }`}>
+                {mediaUrls.map((url, idx) => {
+                  const isImage = url.startsWith('data:image/');
+                  const isVideo = url.startsWith('data:video/');
+                  
+                  return (
+                    <div
+                      key={idx}
+                      className="relative rounded-lg overflow-hidden bg-black/50 border border-[#27B4F5]/20 group/media"
+                    >
+                      {isImage ? (
+                        <img
+                          src={url}
+                          alt={`Media ${idx + 1}`}
+                          className="w-full h-auto object-cover group-hover/media:scale-105 transition-transform duration-300"
+                        />
+                      ) : isVideo ? (
+                        <video
+                          src={url}
+                          controls
+                          className="w-full h-auto"
+                        >
+                          Your browser does not support the video tag.
+                        </video>
+                      ) : null}
+                    </div>
+                  );
+                })}
+              </div>
             )}
           </div>
 

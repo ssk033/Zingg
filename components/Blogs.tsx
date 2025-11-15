@@ -10,6 +10,7 @@ type Blog = {
   authorID?: string;
   title: string;
   content: string;
+  mediaUrls?: string[];
   createdAt: string;
   _count: { likes: number };
 };
@@ -78,6 +79,7 @@ export const Blogs = ({ blogs, onBlogDeleted }: BlogsProps) => {
               authorId={blog.authorID || blog.author.id}
               title={blog.title}
               content={blog.content}
+              mediaUrls={blog.mediaUrls || []}
               initialLikes={blog._count.likes}
               onViewComments={() => loadComments(blog.id)}
               onDeleteBlog={onBlogDeleted}

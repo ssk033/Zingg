@@ -3,8 +3,9 @@
 import { cn } from "@/lib/utils";
 import React, { useRef, useState } from "react";
 import { motion } from "motion/react";
-import { IconUpload, IconX } from "@tabler/icons-react";
+import { IconUpload, IconX, IconCrop } from "@tabler/icons-react";
 import { useDropzone } from "react-dropzone";
+import { ImageCropper } from "./image-cropper";
 
 interface CompactFileUploadProps {
   onChange?: (files: File[]) => void;
@@ -18,6 +19,7 @@ export const CompactFileUpload = ({
   maxFiles = 1,
 }: CompactFileUploadProps) => {
   const [files, setFiles] = useState<File[]>([]);
+  const [croppingIndex, setCroppingIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (newFiles: File[]) => {
@@ -33,8 +35,49 @@ export const CompactFileUpload = ({
 
     const filesToAdd = validFiles.slice(0, maxFiles - files.length);
     if (filesToAdd.length > 0) {
-      const updatedFiles = [...files, ...filesToAdd];
+      // For images, open cropper immediately
+      const imageFiles = filesToAdd.filter((f) => f.type.startsWith("image/"));
+      const videoFiles = filesToAdd.filter((f) => f.type.startsWith("video/"));
+      
+      // Add videos directly
+      if (videoFiles.length > 0) {
+        const updatedFiles = [...files, ...videoFiles];
+        setFiles(updatedFiles);
+        if (onChange) {
+          onChange(updatedFiles);
+        }
+      }
+      
+      // Open cropper for first image
+      if (imageFiles.length > 0) {
+        setCroppingIndex(files.length);
+        // Store the image file temporarily
+        const tempFiles = [...files];
+        tempFiles.push(imageFiles[0]);
+        setFiles(tempFiles);
+      }
+    }
+  };
+
+  const handleCropComplete = (croppedBlob: Blob, index: number) => {
+    const croppedFile = new File([croppedBlob], files[index]?.name || "cropped.jpg", {
+      type: "image/jpeg",
+    });
+    const updatedFiles = [...files];
+    updatedFiles[index] = croppedFile;
+    setFiles(updatedFiles);
+    setCroppingIndex(null);
+    if (onChange) {
+      onChange(updatedFiles);
+    }
+  };
+
+  const handleCropCancel = () => {
+    // Remove the file that was being cropped
+    if (croppingIndex !== null) {
+      const updatedFiles = files.filter((_, i) => i !== croppingIndex);
       setFiles(updatedFiles);
+      setCroppingIndex(null);
       if (onChange) {
         onChange(updatedFiles);
       }
@@ -108,44 +151,77 @@ export const CompactFileUpload = ({
         {/* File Preview List */}
         {files.length > 0 && (
           <div className="flex flex-col gap-2 mt-2">
-            {files.map((file, idx) => (
-              <motion.div
-                key={`file-${idx}`}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={cn(
-                  "flex items-center justify-between p-2 rounded-lg",
-                  "bg-black/30 backdrop-blur-sm border border-[#27B4F5]/30"
-                )}
-              >
-                <div className="flex items-center gap-2 flex-1 min-w-0">
-                  <div className="flex-shrink-0 w-8 h-8 rounded bg-[#27B4F5]/20 flex items-center justify-center">
-                    {file.type.startsWith("image/") ? (
-                      <span className="text-xs">🖼️</span>
-                    ) : (
-                      <span className="text-xs">🎥</span>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-gray-200 truncate">{file.name}</p>
-                    <p className="text-xs text-gray-400">
-                      {(file.size / (1024 * 1024)).toFixed(2)} MB
-                    </p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => handleRemove(idx)}
+            {files.map((file, idx) => {
+              const isImage = file.type.startsWith("image/");
+              const previewUrl = isImage ? URL.createObjectURL(file) : null;
+              
+              return (
+                <motion.div
+                  key={`file-${idx}`}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
                   className={cn(
-                    "ml-2 p-1 rounded hover:bg-red-500/20 text-gray-400 hover:text-red-400",
-                    "transition-colors"
+                    "flex items-center justify-between p-2 rounded-lg",
+                    "bg-black/30 backdrop-blur-sm border border-[#27B4F5]/30"
                   )}
                 >
-                  <IconX className="w-4 h-4" />
-                </button>
-              </motion.div>
-            ))}
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    {isImage && previewUrl ? (
+                      <img
+                        src={previewUrl}
+                        alt="Preview"
+                        className="w-12 h-12 rounded object-cover flex-shrink-0"
+                      />
+                    ) : (
+                      <div className="flex-shrink-0 w-12 h-12 rounded bg-[#27B4F5]/20 flex items-center justify-center">
+                        <span className="text-xs">🎥</span>
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-gray-200 truncate">{file.name}</p>
+                      <p className="text-xs text-gray-400">
+                        {(file.size / (1024 * 1024)).toFixed(2)} MB
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    {isImage && (
+                      <button
+                        type="button"
+                        onClick={() => setCroppingIndex(idx)}
+                        className={cn(
+                          "p-1 rounded hover:bg-[#27B4F5]/20 text-[#27B4F5] hover:text-white",
+                          "transition-colors"
+                        )}
+                        title="Crop/Resize"
+                      >
+                        <IconCrop className="w-4 h-4" />
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => handleRemove(idx)}
+                      className={cn(
+                        "p-1 rounded hover:bg-red-500/20 text-gray-400 hover:text-red-400",
+                        "transition-colors"
+                      )}
+                    >
+                      <IconX className="w-4 h-4" />
+                    </button>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
+        )}
+
+        {/* Image Cropper Modal */}
+        {croppingIndex !== null && files[croppingIndex] && (
+          <ImageCropper
+            image={files[croppingIndex]}
+            onCropComplete={(blob) => handleCropComplete(blob, croppingIndex)}
+            onCancel={handleCropCancel}
+          />
         )}
       </div>
     </div>

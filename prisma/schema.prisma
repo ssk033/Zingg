@@ -39,6 +39,7 @@ model Blog {
   content   String
   title     String
   published Boolean  @default(false)
+  mediaUrls String[] @default([]) // Array of image/video URLs
   createdAt DateTime @default(now())
 
   author   User      @relation(fields: [authorID], references: [id])

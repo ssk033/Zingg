@@ -146,7 +146,7 @@ export default function Add({ onClose, onBlogAdded }: AddProps) {
           placeholder="Write your content here..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="w-full h-56 p-3 bg-black/20 backdrop-blur-sm border border-[#27B4F5]/40 text-white rounded-lg mb-6
+          className="w-full h-40 p-3 bg-black/20 backdrop-blur-sm border border-[#27B4F5]/40 text-white rounded-lg mb-6
           focus:border-[#27B4F5] focus:shadow-[0_0_20px_rgba(39,180,245,0.6)] outline-none transition-all duration-300
           placeholder:text-gray-500 resize-none"
           disabled={loading}
@@ -160,6 +160,45 @@ export default function Add({ onClose, onBlogAdded }: AddProps) {
             maxFiles={5}
           />
         </div>
+
+        {/* Preview Section - How the post will look */}
+        {(title || content || files.length > 0) && (
+          <div className="mb-6 p-4 rounded-lg bg-black/30 border border-[#27B4F5]/30">
+            <h3 className="text-sm font-semibold text-[#27B4F5] mb-3">Preview</h3>
+            <div className="space-y-3">
+              {title && (
+                <h2 className="text-xl font-bold text-white">{title}</h2>
+              )}
+              {content && (
+                <p className="text-sm text-gray-300 whitespace-pre-wrap">{content}</p>
+              )}
+              {files.length > 0 && (
+                <div className="grid grid-cols-2 gap-2 mt-3">
+                  {files.map((file, idx) => {
+                    const isImage = file.type.startsWith("image/");
+                    const previewUrl = isImage ? URL.createObjectURL(file) : null;
+                    
+                    return (
+                      <div key={idx} className="relative rounded-lg overflow-hidden bg-black/50">
+                        {isImage && previewUrl ? (
+                          <img
+                            src={previewUrl}
+                            alt={`Preview ${idx + 1}`}
+                            className="w-full h-48 object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-48 flex items-center justify-center bg-[#27B4F5]/20">
+                            <span className="text-4xl">🎥</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {loading ? (
           <div className="flex justify-center py-3">
