@@ -4,9 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Add from "@/components/AddBlog";
+import { useTheme } from "./ThemeProvider";
 
 export default function NavBar() {
   const router = useRouter();
+  const { theme, toggleTheme } = useTheme();
   const [openSidebar, setOpenSidebar] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [navVisible, setNavVisible] = useState(true);
@@ -23,9 +25,11 @@ export default function NavBar() {
         <div
           className="
             relative backdrop-blur-[20px]
-            bg-gradient-to-b from-[#0B0E10]/80 via-[#0B0E10]/70 to-[#0B0E10]/80
+            bg-gradient-to-b from-white/90 via-white/85 to-white/90
+            dark:from-[#0B0E10]/80 dark:via-[#0B0E10]/70 dark:to-[#0B0E10]/80
             border-b border-[#27B4F5]/40
-            shadow-[0_0_30px_rgba(39,180,245,0.6),inset_0_1px_0_rgba(255,255,255,0.1)]
+            shadow-[0_0_30px_rgba(39,180,245,0.3),inset_0_1px_0_rgba(0,0,0,0.05)]
+            dark:shadow-[0_0_30px_rgba(39,180,245,0.6),inset_0_1px_0_rgba(255,255,255,0.1)]
             px-8 pt-5 pb-5 flex justify-between items-center
             before:absolute before:inset-0 before:bg-gradient-to-r 
             before:from-[#27B4F5]/5 before:via-transparent before:to-transparent
@@ -88,8 +92,8 @@ export default function NavBar() {
 
           {/* ================= PREMIUM NAV BUTTONS ================= */}
           <div className="flex items-center space-x-8 z-10">
-            <button className="relative text-[17px] font-semibold text-white/90 group
-              hover:text-white transition-all duration-300">
+            <button className="relative text-[17px] font-semibold text-gray-800 dark:text-white/90 group
+              hover:text-[#27B4F5] dark:hover:text-white transition-all duration-300">
               <span className="relative z-10">Our Story</span>
               <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-gradient-to-r from-[#27B4F5] to-[#00eeff] 
                 transition-all duration-300 group-hover:w-full shadow-[0_0_10px_#27B4F5]" />
@@ -99,8 +103,8 @@ export default function NavBar() {
 
             <button
               onClick={() => router.push("/blogs")}
-              className="relative text-[17px] font-semibold text-white/90 group
-                hover:text-white transition-all duration-300"
+              className="relative text-[17px] font-semibold text-gray-800 dark:text-white/90 group
+                hover:text-[#27B4F5] dark:hover:text-white transition-all duration-300"
             >
               <span className="relative z-10">Blogs</span>
               <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-gradient-to-r from-[#27B4F5] to-[#00eeff] 
@@ -128,6 +132,35 @@ export default function NavBar() {
               "
             >
               <span className="relative z-10">Sign Up</span>
+            </button>
+
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              className="
+                relative overflow-hidden
+                w-11 h-11 rounded-full
+                bg-gradient-to-r from-[#27B4F5]/20 to-[#27B4F5]/10
+                border border-[#27B4F5]/70
+                flex items-center justify-center
+                shadow-[0_0_15px_rgba(39,180,245,0.4)]
+                hover:bg-[#27B4F5] hover:border-[#27B4F5]
+                hover:shadow-[0_0_30px_rgba(39,180,245,0.8)]
+                hover:scale-110 active:scale-95
+                transition-all duration-300 ease-out
+                group
+              "
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? (
+                <span className="text-[#27B4F5] group-hover:text-black text-xl font-bold transition-colors duration-300">
+                  ☀️
+                </span>
+              ) : (
+                <span className="text-[#27B4F5] group-hover:text-black text-xl font-bold transition-colors duration-300">
+                  🌙
+                </span>
+              )}
             </button>
 
             <div className="relative group">
@@ -192,12 +225,14 @@ export default function NavBar() {
       >
         {/* Premium blur glass */}
         <div className="absolute inset-0 
-          bg-gradient-to-br from-[#0B0E10]/90 via-[#0B0E10]/85 to-[#0B0E10]/90
+          bg-gradient-to-br from-white/95 via-white/90 to-white/95
+          dark:from-[#0B0E10]/90 dark:via-[#0B0E10]/85 dark:to-[#0B0E10]/90
           backdrop-blur-2xl 
           border-l border-[#27B4F5]/40 
-          shadow-[0_0_40px_rgba(39,180,245,0.5),inset_0_0_50px_rgba(39,180,245,0.1)]" />
+          shadow-[0_0_40px_rgba(39,180,245,0.3),inset_0_0_50px_rgba(39,180,245,0.05)]
+          dark:shadow-[0_0_40px_rgba(39,180,245,0.5),inset_0_0_50px_rgba(39,180,245,0.1)]" />
 
-        <div className="relative z-10 p-6 space-y-4 text-white">
+        <div className="relative z-10 p-6 space-y-4 text-gray-800 dark:text-white">
           <h2 className="text-3xl font-extrabold mb-6 
             bg-gradient-to-r from-[#27B4F5] to-[#00eeff]
             bg-clip-text text-transparent

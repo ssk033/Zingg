@@ -164,11 +164,14 @@ export const Blogcard = ({
           className="
             border p-7 rounded-2xl
             backdrop-blur-[10px]
-            bg-gradient-to-br from-[#0B0E10]/90 via-[#0B0E10]/85 to-[#0B0E10]/90
+            bg-gradient-to-br from-white/95 via-white/90 to-white/95
+            dark:from-[#0B0E10]/90 dark:via-[#0B0E10]/85 dark:to-[#0B0E10]/90
             border-[#27B4F5]/50
-            shadow-[0_0_30px_rgba(39,180,245,0.5),inset_0_1px_0_rgba(255,255,255,0.1)]
+            shadow-[0_0_30px_rgba(39,180,245,0.3),inset_0_1px_0_rgba(0,0,0,0.05)]
+            dark:shadow-[0_0_30px_rgba(39,180,245,0.5),inset_0_1px_0_rgba(255,255,255,0.1)]
             transition-all duration-500 ease-out
-            group-hover:shadow-[0_0_50px_rgba(39,180,245,0.8),inset_0_1px_0_rgba(255,255,255,0.15)]
+            group-hover:shadow-[0_0_50px_rgba(39,180,245,0.5),inset_0_1px_0_rgba(0,0,0,0.1)]
+            dark:group-hover:shadow-[0_0_50px_rgba(39,180,245,0.8),inset_0_1px_0_rgba(255,255,255,0.15)]
             group-hover:scale-[1.02] group-hover:border-[#27B4F5]
           "
         >
@@ -193,7 +196,7 @@ export const Blogcard = ({
                   {authorname.slice(0, 2).toUpperCase()}
                 </span>
               </div>
-              <div className="text-sm text-gray-300 font-medium group-hover:text-[#27B4F5] transition-colors">
+              <div className="text-sm text-gray-600 dark:text-gray-300 font-medium group-hover:text-[#27B4F5] transition-colors">
                 {authorname}
               </div>
             </div>
@@ -216,9 +219,9 @@ export const Blogcard = ({
                   className="
                     absolute right-0 top-6 w-40 rounded-xl px-3 py-2 z-50
                     backdrop-blur-xl
-                    bg-[#0B0E10]/80
+                    bg-white/95 dark:bg-[#0B0E10]/80
                     border border-[#27B4F5]/40
-                    shadow-[0_0_20px_rgba(39,180,245,0.6)]
+                    shadow-[0_0_20px_rgba(39,180,245,0.3)] dark:shadow-[0_0_20px_rgba(39,180,245,0.6)]
                     animate-fadeSlideIn
                   "
                 >
@@ -228,7 +231,7 @@ export const Blogcard = ({
                       setMenuOpen(false);
                     }}
                     className="
-                      w-full text-left px-3 py-2 rounded-lg text-gray-200
+                      w-full text-left px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200
                       hover:bg-[#27B4F5] hover:text-black transition mb-1
                     "
                   >
@@ -240,7 +243,7 @@ export const Blogcard = ({
                       setMenuOpen(false); // auto close
                     }}
                     className="
-                      w-full text-left px-3 py-2 rounded-lg text-gray-200
+                      w-full text-left px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200
                       hover:bg-[#27B4F5] hover:text-black transition mb-1
                     "
                   >
@@ -253,7 +256,7 @@ export const Blogcard = ({
                         setMenuOpen(false);
                       }}
                       className="
-                        w-full text-left px-3 py-2 rounded-lg text-red-400
+                        w-full text-left px-3 py-2 rounded-lg text-red-500 dark:text-red-400
                         hover:bg-red-500 hover:text-white transition
                       "
                     >
@@ -266,7 +269,7 @@ export const Blogcard = ({
           </div>
 
           {/* ================= PREMIUM TITLE ================= */}
-          <h2 className="text-3xl font-bold text-white mt-5 
+          <h2 className="text-3xl font-bold text-gray-800 dark:text-white mt-5 
             group-hover:text-[#27B4F5] 
             drop-shadow-[0_0_10px_rgba(39,180,245,0.3)]
             group-hover:drop-shadow-[0_0_20px_rgba(39,180,245,0.6)]
@@ -276,7 +279,7 @@ export const Blogcard = ({
 
           {/* ================= PREMIUM CONTENT ================= */}
           <div className="mt-3">
-            <p className={`text-base text-gray-400 group-hover:text-gray-300 transition-colors ${
+            <p className={`text-base text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors ${
               !showFullContent && shouldTruncate ? 'line-clamp-3' : ''
             }`}>
               {content}
@@ -333,7 +336,7 @@ export const Blogcard = ({
 
           {/* ================= FOOTER ================= */}
           <div className="mt-6 flex justify-between items-center">
-            <div className="text-xs text-gray-500">{today}</div>
+            <div className="text-xs text-gray-500 dark:text-gray-500">{today}</div>
 
             <div className="flex items-center gap-3">
               {/* ❤️ PREMIUM LIKE */}
@@ -346,7 +349,7 @@ export const Blogcard = ({
                   ${
                     liked
                       ? "bg-[#27B4F5] text-black shadow-[0_0_20px_rgba(39,180,245,0.8)] border-transparent hover:shadow-[0_0_30px_rgba(39,180,245,1)]"
-                      : "bg-black/20 backdrop-blur-sm text-gray-200 border-[#27B4F5]/50 hover:bg-[#27B4F5] hover:text-black hover:border-[#27B4F5] hover:shadow-[0_0_20px_rgba(39,180,245,0.6)]"
+                      : "bg-gray-100 dark:bg-black/20 backdrop-blur-sm text-gray-700 dark:text-gray-200 border-[#27B4F5]/50 hover:bg-[#27B4F5] hover:text-black hover:border-[#27B4F5] hover:shadow-[0_0_20px_rgba(39,180,245,0.6)]"
                   }
                   hover:scale-105 active:scale-95
                 `}
@@ -362,8 +365,8 @@ export const Blogcard = ({
                 className="
                   relative overflow-hidden
                   flex items-center gap-2 px-5 py-2 text-sm font-semibold rounded-lg
-                  border border-[#27B4F5]/50 text-gray-200
-                  bg-black/20 backdrop-blur-sm
+                  border border-[#27B4F5]/50 text-gray-700 dark:text-gray-200
+                  bg-gray-100 dark:bg-black/20 backdrop-blur-sm
                   hover:bg-[#27B4F5] hover:text-black hover:border-[#27B4F5]
                   hover:shadow-[0_0_20px_rgba(39,180,245,0.6)]
                   transition-all duration-300 ease-out
@@ -384,20 +387,22 @@ export const Blogcard = ({
 
       {/* ================= PREMIUM COMMENT MODAL ================= */}
       {commentOpen && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-md flex justify-center items-center z-50">
           <div
             className="p-8 rounded-2xl w-[450px]
             backdrop-blur-[20px]
-            bg-gradient-to-br from-[#0B0E10]/90 via-[#0B0E10]/85 to-[#0B0E10]/90
+            bg-gradient-to-br from-white/95 via-white/90 to-white/95
+            dark:from-[#0B0E10]/90 dark:via-[#0B0E10]/85 dark:to-[#0B0E10]/90
             border border-[#27B4F5]/50
-            shadow-[0_0_45px_rgba(39,180,245,0.6),inset_0_1px_0_rgba(255,255,255,0.1)]"
+            shadow-[0_0_45px_rgba(39,180,245,0.3),inset_0_1px_0_rgba(0,0,0,0.05)]
+            dark:shadow-[0_0_45px_rgba(39,180,245,0.6),inset_0_1px_0_rgba(255,255,255,0.1)]"
           >
-            <h2 className="text-2xl font-bold text-white">Add Comment 💬</h2>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Add Comment 💬</h2>
 
             <textarea
               className="
-                w-full h-32 mt-5 p-4 text-gray-200 rounded-lg outline-none
-                bg-transparent border border-[#27B4F5]/40
+                w-full h-32 mt-5 p-4 text-gray-800 dark:text-gray-200 rounded-lg outline-none
+                bg-gray-100 dark:bg-transparent border border-[#27B4F5]/40
                 focus:border-[#27B4F5] focus:shadow-[0_0_12px_rgba(39,180,245,0.6)]
               "
               placeholder="Write comment..."
@@ -408,7 +413,7 @@ export const Blogcard = ({
             <div className="flex justify-end gap-4 mt-5">
               <button
                 onClick={() => setCommentOpen(false)}
-                className="px-4 py-2 rounded-lg border border-[#27B4F5]/50 text-gray-300 hover:bg-[#27B4F5]/20 transition"
+                className="px-4 py-2 rounded-lg border border-[#27B4F5]/50 text-gray-700 dark:text-gray-300 hover:bg-[#27B4F5]/20 transition"
               >
                 Cancel
               </button>

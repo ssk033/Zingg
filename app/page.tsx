@@ -43,14 +43,14 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen w-full text-white flex flex-col items-center justify-start overflow-visible relative bg-black">
+    <div className="min-h-screen w-full text-gray-800 dark:text-white flex flex-col items-center justify-start overflow-visible relative bg-white dark:bg-black">
       {/* ✅ Subtle gradient overlay for depth */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#27B4F5]/5 via-transparent to-transparent pointer-events-none z-0" />
 
       {/* ✅ Neon Grid Background with hover comet effect */}
       <div
         ref={gridRef}
-        className="absolute inset-0 grid grid-cols-[repeat(18,minmax(0,1fr))] grid-rows-[repeat(12,minmax(0,1fr))] opacity-60 z-0"
+        className="absolute inset-0 grid grid-cols-[repeat(18,minmax(0,1fr))] grid-rows-[repeat(12,minmax(0,1fr))] opacity-30 dark:opacity-60 z-0"
       >
         {Array.from({ length: 216 }).map((_, i) => (
           <div 
@@ -67,7 +67,7 @@ export default function Home() {
           <TextHoverEffect text="ZINGG" />
         </div>
 
-        <p className="text-gray-300 text-lg sm:text-xl md:text-2xl mt-6 max-w-2xl relative z-10">
+        <p className="text-gray-600 dark:text-gray-300 text-lg sm:text-xl md:text-2xl mt-6 max-w-2xl relative z-10">
           Create Your Own Story. Let&apos;s rewrite the past, redesign the present, redefine the future.
         </p>
 

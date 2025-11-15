@@ -56,7 +56,7 @@ export async function POST(req: Request) {
         title,
         content,
         authorID,
-        mediaUrls: mediaUrls.length > 0 ? mediaUrls : [],
+        mediaUrls,
       },
     });
 

@@ -105,7 +105,7 @@ export default function ProfileSidebar({ name, username, totalBlogs, onToggle }:
       {/* Mobile Overlay */}
       {isMobile && open && (
         <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[44] lg:hidden"
+          className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm z-[44] lg:hidden"
           onClick={() => setOpen(false)}
         />
       )}
@@ -117,11 +117,11 @@ export default function ProfileSidebar({ name, username, totalBlogs, onToggle }:
           fixed z-[49]
           p-2.5 rounded-full font-bold
           text-[#27B4F5]
-          backdrop-blur-xl bg-[#0B0E10]/70
+          backdrop-blur-xl bg-white/90 dark:bg-[#0B0E10]/70
           border border-[#27B4F5]/60
           hover:bg-[#27B4F5] hover:text-black
-          shadow-[0_0_25px_rgba(39,180,245,0.7)]
-          hover:shadow-[0_0_40px_rgba(39,180,245,1)]
+          shadow-[0_0_25px_rgba(39,180,245,0.4)] dark:shadow-[0_0_25px_rgba(39,180,245,0.7)]
+          hover:shadow-[0_0_40px_rgba(39,180,245,0.6)] dark:hover:shadow-[0_0_40px_rgba(39,180,245,1)]
           transition-all duration-300
           left-4
         "
@@ -154,15 +154,15 @@ export default function ProfileSidebar({ name, username, totalBlogs, onToggle }:
         <div
           className="
             absolute inset-0
-            backdrop-blur-2xl bg-[#0B0E10]/70
+            backdrop-blur-2xl bg-white/90 dark:bg-[#0B0E10]/70
             border-r border-[#27B4F5]/40
-            shadow-[0_0_50px_rgba(39,180,245,0.6)]
+            shadow-[0_0_50px_rgba(39,180,245,0.3)] dark:shadow-[0_0_50px_rgba(39,180,245,0.6)]
             lg:rounded-r-2xl
           "
         />
 
         {/* Sidebar Content */}
-        <div className="relative z-10 p-6 lg:p-8 text-white flex flex-col justify-between h-full custom-scrollbar">
+        <div className="relative z-10 p-6 lg:p-8 text-gray-800 dark:text-white flex flex-col justify-between h-full custom-scrollbar">
           <div className="flex flex-col gap-6 lg:gap-8">
             <h2 className="text-2xl lg:text-3xl font-extrabold text-[#27B4F5] drop-shadow-[0_0_12px_#27B4F5]">
               Profile
@@ -170,7 +170,7 @@ export default function ProfileSidebar({ name, username, totalBlogs, onToggle }:
 
             {/* Name */}
             <div>
-              <p className="text-gray-400 text-xs lg:text-sm">NAME</p>
+              <p className="text-gray-500 dark:text-gray-400 text-xs lg:text-sm">NAME</p>
               <p className="text-lg lg:text-xl font-semibold hover:text-[#27B4F5] transition break-words">
                 {name}
               </p>
@@ -178,7 +178,7 @@ export default function ProfileSidebar({ name, username, totalBlogs, onToggle }:
 
             {/* Username */}
             <div>
-              <p className="text-gray-400 text-xs lg:text-sm">USERNAME</p>
+              <p className="text-gray-500 dark:text-gray-400 text-xs lg:text-sm">USERNAME</p>
               <p className="text-lg lg:text-xl font-semibold break-words opacity-90 hover:text-[#27B4F5] transition">
                 @{username}
               </p>
@@ -186,7 +186,7 @@ export default function ProfileSidebar({ name, username, totalBlogs, onToggle }:
 
             {/* Total Blogs */}
             <div>
-              <p className="text-gray-400 text-xs lg:text-sm">TOTAL BLOGS</p>
+              <p className="text-gray-500 dark:text-gray-400 text-xs lg:text-sm">TOTAL BLOGS</p>
               <p className="text-lg lg:text-xl font-semibold hover:text-[#27B4F5] transition">
                 {totalBlogs}
               </p>

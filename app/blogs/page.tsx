@@ -28,8 +28,8 @@ export default function BlogsPage() {
   return (
     <div className="relative">
       {loading ? (
-        <div className="h-screen flex justify-center items-center bg-black">
-          <div className="w-14 h-14 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+        <div className="h-screen flex justify-center items-center bg-white dark:bg-black">
+          <div className="w-14 h-14 border-4 border-gray-800 dark:border-white border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : (
         <Blogs blogs={blogs} onBlogDeleted={loadBlogs} />
@@ -37,7 +37,7 @@ export default function BlogsPage() {
 
       <button
         onClick={() => setShowAdd(true)}
-        className="fixed bottom-10 right-10 px-6 py-3 bg-black text-white font-semibold rounded-full border border-white/40 hover:scale-110 transition-all duration-300"
+        className="fixed bottom-10 right-10 px-6 py-3 bg-white dark:bg-black text-gray-800 dark:text-white font-semibold rounded-full border border-gray-300 dark:border-white/40 hover:scale-110 transition-all duration-300 shadow-lg dark:shadow-[0_0_20px_rgba(39,180,245,0.4)]"
       >
         + Add Blog
       </button>

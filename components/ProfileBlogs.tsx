@@ -71,8 +71,8 @@ export default function ProfileBlogs({ blogs: initialBlogs }: ProfileBlogsProps)
   return (
     <div className="mt-6 space-y-4">
       {blogs.length === 0 ? (
-        <div className="p-6 rounded-xl border border-[#27B4F5]/20 bg-black/20 backdrop-blur-sm">
-          <p className="text-gray-500 italic text-center">You haven&apos;t posted any blogs yet.</p>
+        <div className="p-6 rounded-xl border border-[#27B4F5]/20 bg-gray-100 dark:bg-black/20 backdrop-blur-sm">
+          <p className="text-gray-500 dark:text-gray-500 italic text-center">You haven&apos;t posted any blogs yet.</p>
         </div>
       ) : (
         blogs.map((blog) => (
@@ -82,11 +82,11 @@ export default function ProfileBlogs({ blogs: initialBlogs }: ProfileBlogsProps)
               relative overflow-hidden
               p-5 rounded-xl
               border border-[#27B4F5]/40 
-              bg-gradient-to-br from-black/30 to-black/20
+              bg-gradient-to-br from-gray-100 to-gray-50 dark:from-black/30 dark:to-black/20
               backdrop-blur-sm
               hover:border-[#27B4F5] hover:bg-[#27B4F5]/10
-              shadow-[0_0_20px_rgba(39,180,245,0.4)]
-              hover:shadow-[0_0_35px_rgba(39,180,245,0.8)]
+              shadow-[0_0_20px_rgba(39,180,245,0.3)] dark:shadow-[0_0_20px_rgba(39,180,245,0.4)]
+              hover:shadow-[0_0_35px_rgba(39,180,245,0.5)] dark:hover:shadow-[0_0_35px_rgba(39,180,245,0.8)]
               transition-all duration-300 ease-out
               hover:scale-[1.02]
               before:absolute before:inset-0 before:bg-gradient-to-r
@@ -97,11 +97,11 @@ export default function ProfileBlogs({ blogs: initialBlogs }: ProfileBlogsProps)
           >
             <div className="flex justify-between items-start relative z-10">
               <div className="flex-1">
-                <h3 className="text-xl font-semibold text-white 
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-white 
                   hover:text-[#27B4F5] transition-colors">
                   {blog.title}
                 </h3>
-                <p className="text-sm text-gray-400 mt-2">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                   {blog.createdAt 
                     ? (blog.createdAt instanceof Date 
                         ? blog.createdAt.toLocaleDateString("en-IN")

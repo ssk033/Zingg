@@ -105,26 +105,28 @@ export default function Add({ onClose, onBlogAdded }: AddProps) {
 
   return (
     <div
-      className={`fixed inset-0 bg-black/70 backdrop-blur-xl flex justify-center items-center z-50 
+      className={`fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-xl flex justify-center items-center z-50 
       transition-all duration-300 ${isClosing ? "opacity-0 translate-y-5" : "opacity-100"}`}
     >
       <div
         className={`relative w-full max-w-2xl p-8 
         backdrop-blur-[10px]
-        bg-gradient-to-br from-[#0B0E10]/90 via-[#0B0E10]/85 to-[#0B0E10]/90
+        bg-gradient-to-br from-white/95 via-white/90 to-white/95
+        dark:from-[#0B0E10]/90 dark:via-[#0B0E10]/85 dark:to-[#0B0E10]/90
         border border-[#27B4F5]/50 rounded-2xl
-        shadow-[0_0_45px_rgba(39,180,245,0.6),inset_0_1px_0_rgba(255,255,255,0.1)]
+        shadow-[0_0_45px_rgba(39,180,245,0.3),inset_0_1px_0_rgba(0,0,0,0.05)]
+        dark:shadow-[0_0_45px_rgba(39,180,245,0.6),inset_0_1px_0_rgba(255,255,255,0.1)]
         transition-all duration-300
         ${isClosing ? "translate-y-10 opacity-0" : "translate-y-0 opacity-100"}`}
       >
         <button
           onClick={handleClose}
-          className="absolute top-3 right-4 text-[#27B4F5] text-2xl hover:scale-125 hover:text-white transition"
+          className="absolute top-3 right-4 text-[#27B4F5] text-2xl hover:scale-125 hover:text-gray-800 dark:hover:text-white transition"
         >
           ✖
         </button>
 
-        <div className="text-4xl font-black italic text-center mb-8 text-white 
+        <div className="text-4xl font-black italic text-center mb-8 text-gray-800 dark:text-white 
           drop-shadow-[0_0_25px_rgba(39,180,245,0.6)]
           group-hover:drop-shadow-[0_0_35px_rgba(39,180,245,0.9)]
           transition-all duration-300">
@@ -136,7 +138,7 @@ export default function Add({ onClose, onBlogAdded }: AddProps) {
           placeholder="Enter title..."
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-3 bg-black/20 backdrop-blur-sm border border-[#27B4F5]/40 text-white rounded-lg mb-6
+          className="w-full p-3 bg-gray-100 dark:bg-black/20 backdrop-blur-sm border border-[#27B4F5]/40 text-gray-800 dark:text-white rounded-lg mb-6
           focus:border-[#27B4F5] focus:shadow-[0_0_20px_rgba(39,180,245,0.6)] outline-none transition-all duration-300
           placeholder:text-gray-500"
           disabled={loading}
@@ -147,7 +149,7 @@ export default function Add({ onClose, onBlogAdded }: AddProps) {
           placeholder="Write your content here..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          className="w-full h-40 p-3 bg-black/20 backdrop-blur-sm border border-[#27B4F5]/40 text-white rounded-lg mb-6
+          className="w-full h-40 p-3 bg-gray-100 dark:bg-black/20 backdrop-blur-sm border border-[#27B4F5]/40 text-gray-800 dark:text-white rounded-lg mb-6
           focus:border-[#27B4F5] focus:shadow-[0_0_20px_rgba(39,180,245,0.6)] outline-none transition-all duration-300
           placeholder:text-gray-500 resize-none"
           disabled={loading}
@@ -164,14 +166,14 @@ export default function Add({ onClose, onBlogAdded }: AddProps) {
 
         {/* Preview Section - How the post will look */}
         {(title || content || files.length > 0) && (
-          <div className="mb-6 p-4 rounded-lg bg-black/30 border border-[#27B4F5]/30">
+            <div className="mb-6 p-4 rounded-lg bg-gray-100 dark:bg-black/30 border border-[#27B4F5]/30">
             <h3 className="text-sm font-semibold text-[#27B4F5] mb-3">Preview</h3>
             <div className="space-y-3">
               {title && (
-                <h2 className="text-xl font-bold text-white">{title}</h2>
+                <h2 className="text-xl font-bold text-gray-800 dark:text-white">{title}</h2>
               )}
               {content && (
-                <p className="text-sm text-gray-300 whitespace-pre-wrap">{content}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap">{content}</p>
               )}
               {files.length > 0 && (
                 <div className="grid grid-cols-2 gap-2 mt-3">

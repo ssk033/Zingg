@@ -38,11 +38,14 @@ export default function Signin() {
       <div
         className="
           relative z-10 p-10 w-[400px] rounded-2xl
-          bg-gradient-to-br from-[#0B0E10]/80 via-[#0B0E10]/75 to-[#0B0E10]/80
+          bg-gradient-to-br from-white/90 via-white/85 to-white/90
+          dark:from-[#0B0E10]/80 dark:via-[#0B0E10]/75 dark:to-[#0B0E10]/80
           backdrop-blur-[20px]
           border border-[#27B4F5]/40
-          shadow-[0_0_40px_rgba(39,180,245,0.6),inset_0_1px_0_rgba(255,255,255,0.1)]
-          hover:shadow-[0_0_70px_rgba(39,180,245,1),inset_0_1px_0_rgba(255,255,255,0.15)]
+          shadow-[0_0_40px_rgba(39,180,245,0.3),inset_0_1px_0_rgba(0,0,0,0.05)]
+          dark:shadow-[0_0_40px_rgba(39,180,245,0.6),inset_0_1px_0_rgba(255,255,255,0.1)]
+          hover:shadow-[0_0_70px_rgba(39,180,245,0.5),inset_0_1px_0_rgba(0,0,0,0.1)]
+          dark:hover:shadow-[0_0_70px_rgba(39,180,245,1),inset_0_1px_0_rgba(255,255,255,0.15)]
           transition-all duration-500 ease-out
           before:absolute before:inset-0 before:rounded-2xl
           before:bg-gradient-to-br before:from-[#27B4F5]/5 before:via-transparent before:to-transparent
@@ -79,11 +82,11 @@ export default function Signin() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             className="
-              w-full p-3 rounded-lg outline-none text-white placeholder:text-gray-500
-              bg-black/20 backdrop-blur-sm
+              w-full p-3 rounded-lg outline-none text-gray-800 dark:text-white placeholder:text-gray-500
+              bg-gray-100 dark:bg-black/20 backdrop-blur-sm
               border border-[#27B4F5]/40
               focus:border-[#27B4F5] focus:shadow-[0_0_20px_#27B4F5,inset_0_0_20px_#27B4F5/10]
-              focus:bg-black/30
+              focus:bg-gray-200 dark:focus:bg-black/30
               transition-all duration-300 ease-out
               hover:border-[#27B4F5]/60
             "
@@ -104,11 +107,11 @@ export default function Signin() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="
-              w-full p-3 rounded-lg outline-none text-white placeholder:text-gray-500
-              bg-black/20 backdrop-blur-sm
+              w-full p-3 rounded-lg outline-none text-gray-800 dark:text-white placeholder:text-gray-500
+              bg-gray-100 dark:bg-black/20 backdrop-blur-sm
               border border-[#27B4F5]/40
               focus:border-[#27B4F5] focus:shadow-[0_0_20px_#27B4F5,inset_0_0_20px_#27B4F5/10]
-              focus:bg-black/30
+              focus:bg-gray-200 dark:focus:bg-black/30
               transition-all duration-300 ease-out
               hover:border-[#27B4F5]/60
             "
@@ -190,7 +193,7 @@ export default function Signin() {
         </button>
 
         {/* Enhanced link */}
-        <p className="text-sm text-center mt-5 text-gray-300">
+        <p className="text-sm text-center mt-5 text-gray-600 dark:text-gray-300">
           Don&apos;t have an account?{" "}
           <Link 
             href="/signup" 
