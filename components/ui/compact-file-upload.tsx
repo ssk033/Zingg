@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import React, { useRef, useState } from "react";
 import { motion } from "motion/react";
+import Image from "next/image";
 import { IconUpload, IconX, IconCrop } from "@tabler/icons-react";
 import { useDropzone } from "react-dropzone";
 import { ImageCropper } from "./image-cropper";
@@ -167,10 +168,13 @@ export const CompactFileUpload = ({
                 >
                   <div className="flex items-center gap-2 flex-1 min-w-0">
                     {isImage && previewUrl ? (
-                      <img
+                      <Image
                         src={previewUrl}
                         alt="Preview"
+                        width={48}
+                        height={48}
                         className="w-12 h-12 rounded object-cover flex-shrink-0"
+                        unoptimized={previewUrl.startsWith('data:') || previewUrl.startsWith('blob:')}
                       />
                     ) : (
                       <div className="flex-shrink-0 w-12 h-12 rounded bg-[#27B4F5]/20 flex items-center justify-center">

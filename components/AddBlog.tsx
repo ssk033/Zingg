@@ -3,6 +3,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { Dialog } from "./Dialog";
 import { CompactFileUpload } from "./ui/compact-file-upload";
 
@@ -181,10 +182,13 @@ export default function Add({ onClose, onBlogAdded }: AddProps) {
                     return (
                       <div key={idx} className="relative rounded-lg overflow-hidden bg-black/50">
                         {isImage && previewUrl ? (
-                          <img
+                          <Image
                             src={previewUrl}
                             alt={`Preview ${idx + 1}`}
+                            width={800}
+                            height={192}
                             className="w-full h-48 object-cover"
+                            unoptimized={previewUrl.startsWith('data:') || previewUrl.startsWith('blob:')}
                           />
                         ) : (
                           <div className="w-full h-48 flex items-center justify-center bg-[#27B4F5]/20">
