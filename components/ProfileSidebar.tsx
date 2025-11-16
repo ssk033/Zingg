@@ -2,6 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import FollowersFollowingModal from "./FollowersFollowingModal";
+import Image from "next/image";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 interface SidebarProps {
   name: string;
@@ -10,7 +13,9 @@ interface SidebarProps {
   userId: string;
   followersCount: number;
   followingCount: number;
+  profileImage?: string | null;
   onToggle?: (isOpen: boolean) => void;
+  onImageUpdate?: (imageUrl: string) => void;
 }
 
 export default function ProfileSidebar({
@@ -20,10 +25,17 @@ export default function ProfileSidebar({
   userId,
   followersCount,
   followingCount,
+  profileImage,
   onToggle,
+  onImageUpdate,
 }: SidebarProps) {
+  const { data: session } = useSession();
+  const isOwnProfile = session?.user?.id === userId;
   const [followersModalOpen, setFollowersModalOpen] = useState(false);
   const [followingModalOpen, setFollowingModalOpen] = useState(false);
+  const [image, setImage] = useState<string | null>(profileImage || null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   // Initialize mobile state based on window width if available
   const [open, setOpen] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -110,8 +122,55 @@ export default function ProfileSidebar({
     }
   }, [open, isMobile, onToggle]);
 
+  // Update image when profileImage prop changes
+  useEffect(() => {
+    setImage(profileImage || null);
+  }, [profileImage]);
+
   const toggleSidebar = () => {
     setOpen(!open);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Image size must be less than 5MB");
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const res = await axios.post("/api/user/avatar", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (res.data.image) {
+        setImage(res.data.image);
+        if (onImageUpdate) {
+          onImageUpdate(res.data.image);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to upload image:", error);
+      alert("Failed to upload image. Please try again.");
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
   };
 
   return (
@@ -124,7 +183,7 @@ export default function ProfileSidebar({
         />
       )}
 
-      {/* Sidebar Toggle Button - Below navbar */}
+      {/* Sidebar Toggle Button - Positioned to not overlap content */}
       <button
         onClick={toggleSidebar}
         className="
@@ -161,7 +220,6 @@ export default function ProfileSidebar({
         style={{
           top: isMobile ? '0' : `${navbarHeight}px`,
           height: isMobile ? '100vh' : `calc(100vh - ${navbarHeight}px)`,
-          marginTop: isMobile ? '0' : '0',
         }}
       >
         {/* Glassmorphic Background */}
@@ -178,7 +236,56 @@ export default function ProfileSidebar({
         {/* Sidebar Content */}
         <div className="relative z-10 p-6 lg:p-8 text-gray-800 dark:text-white flex flex-col justify-between h-full custom-scrollbar">
           <div className="flex flex-col gap-6 lg:gap-8">
-            <h2 className="text-2xl lg:text-3xl font-extrabold text-[#27B4F5] drop-shadow-[0_0_12px_#27B4F5]">
+            {/* Profile Picture Section */}
+            <div className="flex flex-col items-center gap-4">
+              <div className="relative group">
+                <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-[#27B4F5] shadow-[0_0_25px_rgba(39,180,245,0.6)]">
+                  {image ? (
+                    <Image
+                      src={image}
+                      alt={name}
+                      width={96}
+                      height={96}
+                      className="w-full h-full object-cover"
+                      unoptimized={image.startsWith('data:')}
+                    />
+                  ) : (
+                    <Image
+                      src="/icons/blankuser.svg"
+                      alt="Default avatar"
+                      width={96}
+                      height={96}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+                </div>
+                {isOwnProfile && (
+                  <>
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploading}
+                      className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-[#27B4F5] text-black flex items-center justify-center hover:bg-[#00eeff] transition-all shadow-lg hover:scale-110 disabled:opacity-50"
+                      title="Change profile picture"
+                    >
+                      {uploading ? (
+                        <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <span className="text-lg">📷</span>
+                      )}
+                    </button>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                  </>
+                )}
+              </div>
+            </div>
+
+            <h2 className="text-2xl lg:text-3xl font-extrabold text-[#27B4F5] drop-shadow-[0_0_12px_#27B4F5] text-center">
               Profile
             </h2>
 

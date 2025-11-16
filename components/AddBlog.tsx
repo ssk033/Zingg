@@ -68,10 +68,22 @@ export default function Add({ onClose, onBlogAdded }: AddProps) {
       formData.append("content", content);
       formData.append("authorID", session.user.id);
       
-      // Append files if any
-      files.forEach((file) => {
+      // Append files if any (validate size before upload)
+      for (const file of files) {
+        const maxSize = file.type.startsWith("video/") ? 50 * 1024 * 1024 : 10 * 1024 * 1024;
+        if (file.size > maxSize) {
+          setDialog({
+            isOpen: true,
+            title: "File Too Large",
+            message: `File "${file.name}" is too large. Maximum size: ${maxSize / (1024 * 1024)}MB`,
+            type: "alert",
+            onConfirm: () => setDialog((prev) => ({ ...prev, isOpen: false })),
+          });
+          setLoading(false);
+          return;
+        }
         formData.append("files", file);
-      });
+      }
 
       const res = await axios.post("/api/blog", formData, {
         headers: {

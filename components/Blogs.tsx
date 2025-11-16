@@ -6,7 +6,7 @@ import { useState } from "react";
 
 type Blog = {
   id: number;
-  author: { name: string; id?: string };
+  author: { name: string; id?: string; image?: string | null };
   authorID?: string;
   title: string;
   content: string;
@@ -77,6 +77,7 @@ export const Blogs = ({ blogs, onBlogDeleted }: BlogsProps) => {
               blogId={blog.id}
               authorname={blog.author.name}
               authorId={blog.authorID || blog.author.id}
+              authorImage={blog.author.image}
               title={blog.title}
               content={blog.content}
               mediaUrls={blog.mediaUrls || []}

@@ -46,13 +46,30 @@ export async function POST(req: Request) {
     const mediaUrls: string[] = [];
     if (files.length > 0) {
       for (const file of files) {
-        const arrayBuffer = await file.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-        const base64 = buffer.toString("base64");
-        const dataUrl = `data:${file.type};base64,${base64}`;
-        mediaUrls.push(dataUrl);
+        // Validate file size (max 10MB for images, 50MB for videos)
+        const maxSize = file.type.startsWith("video/") ? 50 * 1024 * 1024 : 10 * 1024 * 1024;
+        if (file.size > maxSize) {
+          return NextResponse.json(
+            { error: `File "${file.name}" is too large. Max size: ${maxSize / (1024 * 1024)}MB` },
+            { status: 400 }
+          );
+        }
+
+        try {
+          const arrayBuffer = await file.arrayBuffer();
+          const buffer = Buffer.from(arrayBuffer);
+          const base64 = buffer.toString("base64");
+          const dataUrl = `data:${file.type};base64,${base64}`;
+          mediaUrls.push(dataUrl);
+        } catch (error) {
+          console.error(`Error processing file ${file.name}:`, error);
+          return NextResponse.json(
+            { error: `Failed to process file "${file.name}". Please try a smaller file.` },
+            { status: 400 }
+          );
+        }
       }
-      console.log(`📎 Processed ${files.length} file(s) for blog`);
+      console.log(`Processed ${files.length} file(s) for blog`);
     }
 
     const blog = await prisma.blog.create({

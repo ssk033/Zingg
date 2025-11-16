@@ -17,6 +17,7 @@ type User = {
   id: string;
   name: string | null;
   username: string | null;
+  image: string | null;
   blogs: Blog[];
   followersCount?: number;
   followingCount?: number;
@@ -29,6 +30,12 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+
+  const handleImageUpdate = (imageUrl: string) => {
+    if (user) {
+      setUser({ ...user, image: imageUrl });
+    }
+  };
 
   useEffect(() => {
     const checkMobile = () => {
@@ -97,7 +104,9 @@ export default function ProfilePage() {
         userId={user.id}
         followersCount={user.followersCount ?? 0}
         followingCount={user.followingCount ?? 0}
+        profileImage={user.image}
         onToggle={(isOpen) => setSidebarOpen(isOpen)}
+        onImageUpdate={handleImageUpdate}
       />
 
       {/* Main content area with responsive margin based on sidebar visibility */}

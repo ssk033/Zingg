@@ -10,6 +10,7 @@ interface BlogCardProps {
   blogId: number;
   authorname: string;
   authorId?: string;
+  authorImage?: string | null;
   title: string;
   content: string;
   initialLikes: number;
@@ -22,6 +23,7 @@ export const Blogcard = ({
   blogId,
   authorname,
   authorId,
+  authorImage,
   title,
   content,
   initialLikes,
@@ -218,7 +220,7 @@ export const Blogcard = ({
               <div
                 className="
                   relative inline-flex items-center justify-center
-                  w-12 h-12 rounded-full 
+                  w-12 h-12 rounded-full overflow-hidden
                   bg-gradient-to-br from-[#27B4F5]/20 to-[#27B4F5]/10
                   ring-2 ring-[#27B4F5]
                   shadow-[0_0_25px_rgba(39,180,245,0.6)]
@@ -226,9 +228,24 @@ export const Blogcard = ({
                   transition-all duration-300
                 "
               >
-                <span className="font-semibold text-[#27B4F5] tracking-wide">
-                  {authorname.slice(0, 2).toUpperCase()}
-                </span>
+                {authorImage ? (
+                  <Image
+                    src={authorImage}
+                    alt={authorname}
+                    width={48}
+                    height={48}
+                    className="w-full h-full object-cover"
+                    unoptimized={authorImage.startsWith('data:')}
+                  />
+                ) : (
+                  <Image
+                    src="/icons/blankuser.svg"
+                    alt="Default avatar"
+                    width={48}
+                    height={48}
+                    className="w-full h-full object-cover"
+                  />
+                )}
               </div>
               <div className="flex items-center gap-3">
                 <div className="text-sm text-gray-600 dark:text-gray-300 font-medium group-hover:text-[#27B4F5] transition-colors">
