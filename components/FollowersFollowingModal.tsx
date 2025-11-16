@@ -159,7 +159,7 @@ export default function FollowersFollowingModal({
                       shadow-[0_0_15px_rgba(39,180,245,0.4)]
                     "
                   >
-                    {user.image ? (
+                    {user.image && user.image.trim() ? (
                       <Image
                         src={user.image}
                         alt={user.name || "User"}

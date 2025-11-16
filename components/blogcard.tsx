@@ -228,7 +228,7 @@ export const Blogcard = ({
                   transition-all duration-300
                 "
               >
-                {authorImage ? (
+                {authorImage && authorImage.trim() ? (
                   <Image
                     src={authorImage}
                     alt={authorname}
@@ -238,8 +238,8 @@ export const Blogcard = ({
                     unoptimized={authorImage.startsWith('data:')}
                   />
                 ) : (
-                  <span className="font-semibold text-[#27B4F5] tracking-wide">
-                    {authorname.slice(0, 2).toUpperCase()}
+                  <span className="font-semibold text-[#27B4F5] tracking-wide text-sm">
+                    {authorname ? authorname.slice(0, 2).toUpperCase() : "U"}
                   </span>
                 )}
               </div>

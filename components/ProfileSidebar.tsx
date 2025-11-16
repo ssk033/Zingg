@@ -267,10 +267,10 @@ export default function ProfileSidebar({
             <div className="flex flex-col items-center gap-4">
               <div className="relative group">
                 <button
-                  onClick={() => image && setViewImageModal(true)}
+                  onClick={() => image && image.trim() && setViewImageModal(true)}
                   className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-[#27B4F5] shadow-[0_0_25px_rgba(39,180,245,0.6)] hover:shadow-[0_0_35px_rgba(39,180,245,0.9)] transition-all cursor-pointer flex items-center justify-center"
                 >
-                  {image ? (
+                  {image && image.trim() ? (
                     <Image
                       src={image}
                       alt={name}
@@ -281,7 +281,7 @@ export default function ProfileSidebar({
                     />
                   ) : (
                     <span className="font-semibold text-[#27B4F5] text-2xl tracking-wide">
-                      {name.slice(0, 2).toUpperCase()}
+                      {name ? name.slice(0, 2).toUpperCase() : "U"}
                     </span>
                   )}
                 </button>
