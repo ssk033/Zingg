@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import axios from "axios";
 import Image from "next/image";
 
@@ -178,33 +179,27 @@ export default function MentionInput({
     return { top, left };
   };
 
-  return (
-    <div className="relative">
-      <textarea
-        ref={textareaRef}
-        value={value}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        placeholder={placeholder}
-        className={className}
-      />
+  const [mounted, setMounted] = useState(false);
 
-      {/* Suggestions Dropdown */}
-      {showSuggestions && suggestions.length > 0 && (
-        <div
-          ref={suggestionsRef}
-          style={{
-            ...getSuggestionsPosition(),
-            position: "fixed",
-            zIndex: 1000,
-          }}
-          className="
-            max-h-60 w-64 overflow-auto
-            bg-white/95 dark:bg-[#0B0E10]/95 backdrop-blur-xl
-            border border-[#27B4F5]/60 rounded-lg shadow-2xl
-            py-2
-          "
-        >
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const suggestionsDropdown = showSuggestions && suggestions.length > 0 && (
+    <div
+      ref={suggestionsRef}
+      style={{
+        ...getSuggestionsPosition(),
+        position: "fixed",
+        zIndex: 9999,
+      }}
+      className="
+        max-h-60 w-64 overflow-auto
+        bg-white/95 dark:bg-[#0B0E10]/95 backdrop-blur-xl
+        border border-[#27B4F5]/60 rounded-lg shadow-2xl
+        py-2
+      "
+    >
           {/* Search Bar */}
           <div className="px-3 pb-2 border-b border-[#27B4F5]/30">
             <input
@@ -268,6 +263,23 @@ export default function MentionInput({
             ))}
           </div>
         </div>
+      );
+
+  return (
+    <div className="relative">
+      <textarea
+        ref={textareaRef}
+        value={value}
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        placeholder={placeholder}
+        className={className}
+      />
+
+      {/* Suggestions Dropdown - Rendered in portal to escape modal overflow */}
+      {mounted && suggestionsDropdown && createPortal(
+        suggestionsDropdown,
+        document.body
       )}
     </div>
   );
