@@ -14,9 +14,12 @@ type Blog = {
 };
 
 type User = {
+  id: string;
   name: string | null;
   username: string | null;
   blogs: Blog[];
+  followersCount?: number;
+  followingCount?: number;
 };
 
 export default function ProfilePage() {
@@ -91,6 +94,9 @@ export default function ProfilePage() {
         name={user.name ?? ""}
         username={user.username ?? ""}
         totalBlogs={user.blogs.length}
+        userId={user.id}
+        followersCount={user.followersCount ?? 0}
+        followingCount={user.followingCount ?? 0}
         onToggle={(isOpen) => setSidebarOpen(isOpen)}
       />
 

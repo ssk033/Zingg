@@ -1,15 +1,29 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import FollowersFollowingModal from "./FollowersFollowingModal";
 
 interface SidebarProps {
   name: string;
   username: string;
   totalBlogs: number;
+  userId: string;
+  followersCount: number;
+  followingCount: number;
   onToggle?: (isOpen: boolean) => void;
 }
 
-export default function ProfileSidebar({ name, username, totalBlogs, onToggle }: SidebarProps) {
+export default function ProfileSidebar({
+  name,
+  username,
+  totalBlogs,
+  userId,
+  followersCount,
+  followingCount,
+  onToggle,
+}: SidebarProps) {
+  const [followersModalOpen, setFollowersModalOpen] = useState(false);
+  const [followingModalOpen, setFollowingModalOpen] = useState(false);
   // Initialize mobile state based on window width if available
   const [open, setOpen] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -191,6 +205,34 @@ export default function ProfileSidebar({ name, username, totalBlogs, onToggle }:
                 {totalBlogs}
               </p>
             </div>
+
+            {/* Followers - Clickable */}
+            <div>
+              <p className="text-gray-500 dark:text-gray-400 text-xs lg:text-sm">FOLLOWERS</p>
+              <button
+                onClick={() => setFollowersModalOpen(true)}
+                className="
+                  text-lg lg:text-xl font-semibold hover:text-[#27B4F5] transition
+                  cursor-pointer hover:underline
+                "
+              >
+                {followersCount}
+              </button>
+            </div>
+
+            {/* Following - Clickable */}
+            <div>
+              <p className="text-gray-500 dark:text-gray-400 text-xs lg:text-sm">FOLLOWING</p>
+              <button
+                onClick={() => setFollowingModalOpen(true)}
+                className="
+                  text-lg lg:text-xl font-semibold hover:text-[#27B4F5] transition
+                  cursor-pointer hover:underline
+                "
+              >
+                {followingCount}
+              </button>
+            </div>
           </div>
 
           {/* View Blogs Button */}
@@ -208,6 +250,24 @@ export default function ProfileSidebar({ name, username, totalBlogs, onToggle }:
           </button>
         </div>
       </div>
+
+      {/* Followers Modal */}
+      <FollowersFollowingModal
+        isOpen={followersModalOpen}
+        onClose={() => setFollowersModalOpen(false)}
+        userId={userId}
+        type="followers"
+        title="Followers"
+      />
+
+      {/* Following Modal */}
+      <FollowersFollowingModal
+        isOpen={followingModalOpen}
+        onClose={() => setFollowingModalOpen(false)}
+        userId={userId}
+        type="following"
+        title="Following"
+      />
     </>
   );
 }

@@ -8,7 +8,7 @@ export async function GET(req: Request) {
   try {
     const session = await getServerSession(authOptions);
     
-    if (!session?.user?.username) {
+    if (!session?.user?.id) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -25,14 +25,6 @@ export async function GET(req: Request) {
       );
     }
 
-    // Only allow users to fetch their own data
-    if (username !== session.user.username) {
-      return NextResponse.json(
-        { error: "Forbidden" },
-        { status: 403 }
-      );
-    }
-
     const user = await prisma.user.findUnique({
       where: { username },
       select: {
@@ -40,6 +32,7 @@ export async function GET(req: Request) {
         name: true,
         username: true,
         email: true,
+        image: true,
         blogs: {
           select: {
             id: true,
@@ -48,6 +41,12 @@ export async function GET(req: Request) {
           },
           orderBy: {
             createdAt: "desc",
+          },
+        },
+        _count: {
+          select: {
+            followers: true,
+            following: true,
           },
         },
       },
@@ -60,7 +59,31 @@ export async function GET(req: Request) {
       );
     }
 
-    return NextResponse.json({ user }, { status: 200 });
+    // Check if current user follows this user
+    let followed = false;
+    if (session.user.id !== user.id) {
+      const follow = await prisma.follow.findUnique({
+        where: {
+          followerId_followingId: {
+            followerId: session.user.id,
+            followingId: user.id,
+          },
+        },
+      });
+      followed = !!follow;
+    }
+
+    // Only return email if viewing own profile
+    const { _count, ...userWithoutCount } = user;
+    const userData = {
+      ...userWithoutCount,
+      email: session.user.id === user.id ? user.email : undefined,
+      followed,
+      followersCount: _count.followers,
+      followingCount: _count.following,
+    };
+
+    return NextResponse.json({ user: userData }, { status: 200 });
   } catch (err) {
     console.error("❌ GET /api/user Error:", err);
     const errorMessage = err instanceof Error ? err.message : "Server error";

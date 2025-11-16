@@ -39,6 +39,8 @@ export const Blogcard = ({
 
   const [likes, setLikes] = useState(initialLikes);
   const [liked, setLiked] = useState(false);
+  const [followed, setFollowed] = useState(false);
+  const [followLoading, setFollowLoading] = useState(false);
 
   const [commentOpen, setCommentOpen] = useState(false);
   const [commentText, setCommentText] = useState("");
@@ -74,6 +76,16 @@ export const Blogcard = ({
       .catch((err) => console.error("❌ Error checking like:", err));
   }, [blogId]);
 
+  // ✅ check if following author
+  useEffect(() => {
+    if (!authorId || isAuthor || !session?.user?.id) return;
+    
+    axios
+      .get(`/api/follow?userId=${authorId}`)
+      .then((res) => setFollowed(res.data.followed))
+      .catch((err) => console.error("❌ Error checking follow:", err));
+  }, [authorId, isAuthor, session?.user?.id]);
+
   // ✅ Optimistic like update
   const toggleLike = () => {
     setLiked((prev) => !prev);
@@ -86,6 +98,23 @@ export const Blogcard = ({
         setLiked((prev) => !prev);
         setLikes((prev) => (liked ? prev + 1 : prev - 1));
       });
+  };
+
+  // ✅ Optimistic follow update
+  const toggleFollow = () => {
+    if (!authorId || isAuthor || followLoading) return;
+
+    const prevFollowed = followed;
+    setFollowed(!prevFollowed);
+    setFollowLoading(true);
+
+    axios
+      .post("/api/follow", { userId: authorId })
+      .then((res) => setFollowed(res.data.followed))
+      .catch(() => {
+        setFollowed(prevFollowed);
+      })
+      .finally(() => setFollowLoading(false));
   };
 
   const submitComment = () => {
@@ -196,8 +225,30 @@ export const Blogcard = ({
                   {authorname.slice(0, 2).toUpperCase()}
                 </span>
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-300 font-medium group-hover:text-[#27B4F5] transition-colors">
-                {authorname}
+              <div className="flex items-center gap-3">
+                <div className="text-sm text-gray-600 dark:text-gray-300 font-medium group-hover:text-[#27B4F5] transition-colors">
+                  {authorname}
+                </div>
+                {/* Follow Button - Only show if logged in and not own post */}
+                {session?.user?.id && !isAuthor && authorId && (
+                  <button
+                    onClick={toggleFollow}
+                    disabled={followLoading}
+                    className={`
+                      px-3 py-1 text-xs font-semibold rounded-lg border
+                      transition-all duration-300 ease-out
+                      ${
+                        followed
+                          ? "bg-gray-100 dark:bg-black/20 text-gray-700 dark:text-gray-200 border-[#27B4F5]/50 hover:bg-red-500 hover:text-white hover:border-red-500"
+                          : "bg-[#27B4F5] text-black border-transparent hover:shadow-[0_0_15px_rgba(39,180,245,0.8)]"
+                      }
+                      hover:scale-105 active:scale-95
+                      disabled:opacity-50 disabled:cursor-not-allowed
+                    `}
+                  >
+                    {followed ? "Unfollow" : "+ Follow"}
+                  </button>
+                )}
               </div>
             </div>
 
