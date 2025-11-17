@@ -33,7 +33,7 @@ export const Blogcard = ({
   onDeleteBlog,
 }: BlogCardProps) => {
   const { data: session } = useSession();
-  const isAuthor = session?.user?.id === authorId;
+  const isAuthor = session?.user?.id && authorId && String(session.user.id) === String(authorId);
   const today = new Date().toLocaleDateString("en-IN", {
     day: "2-digit",
     month: "short",
@@ -320,7 +320,7 @@ export const Blogcard = ({
                       hover:bg-[#27B4F5] hover:text-black transition mb-1
                     "
                   >
-                    {showFullContent ? 'Show Less' : 'Read Full Blog 📖'}
+                    {showFullContent ? 'Show Less' : 'Read Full Blog'}
                   </button>
                   <button
                     onClick={() => {
@@ -332,9 +332,9 @@ export const Blogcard = ({
                       hover:bg-[#27B4F5] hover:text-black transition mb-1
                     "
                   >
-                    Show Comments 💬
+                    Show Comments
                   </button>
-                  {isAuthor && onDeleteBlog && (
+                  {isAuthor && (
                     <button
                       onClick={() => {
                         handleDelete();
@@ -345,7 +345,7 @@ export const Blogcard = ({
                         hover:bg-red-500 hover:text-white transition
                       "
                     >
-                      Delete Blog 🗑️
+                      Delete Blog
                     </button>
                   )}
                 </div>
