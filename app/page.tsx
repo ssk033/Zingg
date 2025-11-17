@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 import { CometCard } from "@/components/ui/comet-card";
+import { EncryptedText } from "@/components/ui/encrypted-text";
 
 export default function Home() {
   const gridRef = useRef<HTMLDivElement>(null);
@@ -68,7 +69,12 @@ export default function Home() {
         </div>
 
         <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mt-4 sm:mt-6 max-w-2xl relative z-10 px-2">
-          Create Your Own Story. Let&apos;s rewrite the past, redesign the present, redefine the future.
+          <EncryptedText
+            text="Create Your Own Story. Let's rewrite the past, redesign the present, redefine the future."
+            encryptedClassName="text-gray-500 dark:text-gray-500"
+            revealedClassName="text-gray-600 dark:text-gray-300"
+            revealDelayMs={50}
+          />
         </p>
 
         {/* CTA BUTTON - Animated Border Magic */}
