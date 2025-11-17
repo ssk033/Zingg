@@ -94,32 +94,32 @@ export default function Home() {
         {[
           {
             title: "Smart & Secure Sign-In",
-            description: "Log in effortlessly using Google, LinkedIn, or your own Zing account — fast, secure, and built for speed.",
-            icon: "/icons/smartandsecrue.svg",
+            description: "Log in effortlessly using Google, LinkedIn, or your Zingg account credentials. Fast, secure authentication powered by NextAuth.",
+            icon: "/icons/smartandsecure.svg",
           },
           {
             title: "Build Your Circle",
-            description: "Follow the people you vibe with and unfollow anytime. Curate your perfect social feed.",
+            description: "Follow creators you love and unfollow anytime. Curate your personalized feed with content that matters to you.",
             icon: "/icons/profile.svg",
           },
           {
             title: "Express & Engage",
-            description: "Drop likes, share your thoughts, and join the conversation — interaction made simple.",
+            description: "Like posts, leave comments, and join conversations. Interact with the community and share your thoughts effortlessly.",
             icon: "/icons/ExpressandEngage.svg",
           },
           {
             title: "Discover What's Trending",
-            description: "Explore fresh posts from across the community. Find new creators, ideas, and inspiration.",
+            description: "Explore fresh blog posts from across the community. Discover new creators, ideas, and inspiration in your feed.",
             icon: "/icons/trending-up-svgrepo-com.svg",
           },
           {
             title: "Share Your Moments",
-            description: "Create posts with photos, videos, and tags. Bring your world to life with just a tap.",
+            description: "Create rich blog posts with titles, content, photos, and videos. Mention friends with @mentions and bring your stories to life.",
             icon: "/icons/shareyourmoments.svg",
           },
           {
             title: "Make Your Profile Shine",
-            description: "Customize your bio, photo, and details — build a profile that truly reflects you.",
+            description: "Customize your profile picture, bio, and details. Build a profile that truly represents who you are on Zingg.",
             icon: "/icons/prof.svg",
           },
         ].map((feature, i) => (
