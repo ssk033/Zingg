@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 import { CometCard } from "@/components/ui/comet-card";
 import { EncryptedText } from "@/components/ui/encrypted-text";
@@ -94,32 +95,32 @@ export default function Home() {
           {
             title: "Smart & Secure Sign-In",
             description: "Log in effortlessly using Google, LinkedIn, or your own Zing account — fast, secure, and built for speed.",
-            icon: "🔐",
+            icon: "/icons/smartandsecrue.svg",
           },
           {
             title: "Build Your Circle",
             description: "Follow the people you vibe with and unfollow anytime. Curate your perfect social feed.",
-            icon: "👥",
+            icon: "/icons/profile.svg",
           },
           {
             title: "Express & Engage",
             description: "Drop likes, share your thoughts, and join the conversation — interaction made simple.",
-            icon: "💬",
+            icon: "/icons/ExpressandEngage.svg",
           },
           {
             title: "Discover What's Trending",
             description: "Explore fresh posts from across the community. Find new creators, ideas, and inspiration.",
-            icon: "🔥",
+            icon: "/icons/trending-up-svgrepo-com.svg",
           },
           {
             title: "Share Your Moments",
             description: "Create posts with photos, videos, and tags. Bring your world to life with just a tap.",
-            icon: "📸",
+            icon: "/icons/shareyourmoments.svg",
           },
           {
             title: "Make Your Profile Shine",
             description: "Customize your bio, photo, and details — build a profile that truly reflects you.",
-            icon: "✨",
+            icon: "/icons/prof.svg",
           },
         ].map((feature, i) => (
           <CometCard key={i}>
@@ -133,7 +134,15 @@ export default function Home() {
                 h-full flex flex-col
               "
             >
-              <div className="text-4xl sm:text-5xl md:text-6xl mb-3 sm:mb-4">{feature.icon}</div>
+              <div className="mb-3 sm:mb-4 flex items-center justify-start">
+                <Image
+                  src={feature.icon}
+                  alt={feature.title}
+                  width={64}
+                  height={64}
+                  className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16"
+                />
+              </div>
               <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-[#27B4F5] mb-2 sm:mb-3
                 drop-shadow-[0_0_10px_#27B4F5/50]">
                 {feature.title}
