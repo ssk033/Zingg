@@ -7,7 +7,6 @@ import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 import { CometCard } from "@/components/ui/comet-card";
 import { EncryptedText } from "@/components/ui/encrypted-text";
 import { FloatingDock } from "@/components/ui/floating-dock";
-import { Button as MovingBorderButton } from "@/components/ui/moving-border";
 import { IconBrandGithub, IconBrandX, IconBrandLinkedin } from "@tabler/icons-react";
 
 export default function Home() {
@@ -81,19 +80,15 @@ export default function Home() {
           />
         </p>
 
-        {/* CTA BUTTON - Moving Border */}
-        <div className="relative z-10 mt-8 sm:mt-12 md:mt-14">
-          <MovingBorderButton
-            as={Link}
-            href="/signup"
-            borderRadius="1.75rem"
-            containerClassName="h-12 sm:h-14 md:h-16 w-auto min-w-[200px] sm:min-w-[240px] md:min-w-[280px]"
-            borderClassName="h-20 w-20 bg-[radial-gradient(#27B4F5_40%,transparent_60%)] opacity-[0.8]"
-            className="bg-white/10 dark:bg-slate-900/80 text-black dark:text-white border-[#27B4F5]/50 dark:border-slate-800 px-8 sm:px-10 md:px-12 text-sm sm:text-base md:text-lg font-semibold hover:bg-[#27B4F5]/10 dark:hover:bg-[#27B4F5]/20 transition-colors duration-300"
-          >
-            🚀 Start Blogging Now
-          </MovingBorderButton>
-        </div>
+        {/* CTA BUTTON - Animated Border Magic */}
+        <Link href="/signup" className="relative z-10 mt-8 sm:mt-12 md:mt-14">
+          <button className="relative inline-flex h-10 sm:h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-[#27B4F5] focus:ring-offset-2 focus:ring-offset-black">
+            <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#27B4F5_0%,#00eeff_50%,#27B4F5_100%)]" />
+            <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-black px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base font-semibold text-[#27B4F5] backdrop-blur-3xl hover:text-white transition-colors duration-300">
+              🚀 Start Blogging Now
+            </span>
+          </button>
+        </Link>
       </section>
 
       {/* FEATURE CARDS with Comet Card Effect */}
