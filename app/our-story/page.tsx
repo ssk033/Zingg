@@ -211,7 +211,12 @@ export default function OurStoryPage() {
 
       {/* Floating Dock Footer */}
       <footer className="relative z-10 w-full pb-8 sm:pb-12 md:pb-16 pt-8">
-        <div className="flex items-center justify-center">
+        <div className="flex flex-col items-center justify-center gap-4 sm:gap-6">
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#27B4F5]
+            drop-shadow-[0_0_20px_rgba(39,180,245,0.8)]
+            dark:drop-shadow-[0_0_30px_rgba(39,180,245,1)]">
+            Follow Us
+          </h3>
           <FloatingDock
             items={socialLinks}
             mobileClassName="translate-y-0"
