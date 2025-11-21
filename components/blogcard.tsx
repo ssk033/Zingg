@@ -10,6 +10,7 @@ import ProfilePopup from "./ProfilePopup";
 interface BlogCardProps {
   blogId: number;
   authorname: string;
+  authorUsername?: string | null;
   authorId?: string;
   authorImage?: string | null;
   title: string;
@@ -24,6 +25,7 @@ interface BlogCardProps {
 export const Blogcard = ({
   blogId,
   authorname,
+  authorUsername,
   authorId,
   authorImage,
   title,
@@ -540,6 +542,7 @@ export const Blogcard = ({
         <ProfilePopup
           userId={authorId}
           userName={authorname}
+          userUsername={authorUsername}
           userImage={authorImage || null}
           isOpen={profilePopupOpen}
           onClose={() => setProfilePopupOpen(false)}

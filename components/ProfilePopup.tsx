@@ -7,6 +7,7 @@ import Image from "next/image";
 interface ProfilePopupProps {
   userId?: string;
   userName: string;
+  userUsername?: string | null;
   userImage: string | null;
   isOpen: boolean;
   onClose: () => void;
@@ -15,6 +16,7 @@ interface ProfilePopupProps {
 
 export default function ProfilePopup({
   userName,
+  userUsername,
   userImage,
   isOpen,
   onClose,
@@ -55,8 +57,11 @@ export default function ProfilePopup({
   if (!isOpen) return null;
 
   const handleViewProfile = () => {
-    router.push(`/profile?username=${userName}`);
-    onClose();
+    // Only navigate if username is available (required by API)
+    if (userUsername) {
+      router.push(`/profile?username=${userUsername}`);
+      onClose();
+    }
   };
 
   const handleViewPhoto = () => {
@@ -100,11 +105,13 @@ export default function ProfilePopup({
           </button>
           <button
             onClick={handleViewProfile}
+            disabled={!userUsername}
             className="
               px-4 py-2 text-left text-sm font-medium
               text-gray-800 dark:text-white
               hover:bg-[#27B4F5]/20 dark:hover:bg-[#27B4F5]/30
               rounded-md transition-colors
+              disabled:opacity-50 disabled:cursor-not-allowed
             "
           >
             👤 View Profile

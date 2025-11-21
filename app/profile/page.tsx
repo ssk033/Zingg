@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import ProfileSidebar from "@/components/ProfileSidebar";
 import ProfileBlogs from "@/components/ProfileBlogs";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type Blog = {
   id: number;
@@ -43,6 +43,7 @@ type TaggedBlog = {
 export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [user, setUser] = useState<User | null>(null);
   const [taggedBlogs, setTaggedBlogs] = useState<TaggedBlog[]>([]);
   const [taggedCount, setTaggedCount] = useState(0);
@@ -90,22 +91,43 @@ export default function ProfilePage() {
       return;
     }
 
-    if (status === "authenticated" && session?.user?.username) {
-      fetch(`/api/user?username=${session.user.username}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.user) {
-            setUser(data.user);
-            // Load tagged blogs
-            loadTaggedBlogs(session.user.username);
-          } else {
-            router.push("/signin");
-          }
-        })
-        .catch(() => router.push("/signin"))
-        .finally(() => setLoading(false));
+    if (status === "authenticated") {
+      // Check if there's a username query parameter, otherwise use current user's username
+      const usernameParam = searchParams.get("username");
+      const usernameToLoad = usernameParam || session?.user?.username;
+
+      if (usernameToLoad) {
+        fetch(`/api/user?username=${usernameToLoad}`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.user) {
+              setUser(data.user);
+              // Load tagged blogs
+              loadTaggedBlogs(usernameToLoad);
+            } else {
+              // If username param was provided but user not found, redirect to own profile
+              if (usernameParam && session?.user?.username) {
+                router.push("/profile");
+              } else {
+                router.push("/signin");
+              }
+            }
+          })
+          .catch(() => {
+            // If error and username param was provided, redirect to own profile
+            if (usernameParam && session?.user?.username) {
+              router.push("/profile");
+            } else {
+              router.push("/signin");
+            }
+          })
+          .finally(() => setLoading(false));
+      } else {
+        router.push("/signin");
+        setLoading(false);
+      }
     }
-  }, [session, status, router]);
+  }, [session, status, router, searchParams]);
 
   if (status === "loading" || loading) {
     return (
