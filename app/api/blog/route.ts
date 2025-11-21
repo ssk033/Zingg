@@ -10,6 +10,12 @@ import { authOptions } from "../auth/[...nextauth]/authOptions";
  */
 export async function POST(req: Request) {
   try {
+    // Validate session on server side
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const contentType = req.headers.get("content-type");
     
     let title: string;
@@ -39,6 +45,27 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { error: "Missing required fields: title, content, authorID" },
         { status: 400 }
+      );
+    }
+
+    // Verify that the authorID matches the session user (security check)
+    if (authorID !== session.user.id) {
+      return NextResponse.json(
+        { error: "You can only create blogs for yourself" },
+        { status: 403 }
+      );
+    }
+
+    // Verify that the author exists in the database
+    const author = await prisma.user.findUnique({
+      where: { id: authorID },
+      select: { id: true },
+    });
+
+    if (!author) {
+      return NextResponse.json(
+        { error: "Author not found" },
+        { status: 404 }
       );
     }
 
@@ -74,30 +101,34 @@ export async function POST(req: Request) {
 
     // Extract @ mentions from content
     const mentionRegex = /@(\w+)/g;
-    const mentions = Array.from(content.matchAll(mentionRegex)).map(
-      (match) => match[1]
-    );
+    const mentionMatches = content.matchAll(mentionRegex);
+    const mentions = Array.from(mentionMatches, (match) => match[1]);
 
-    // Find users by username
-    const taggedUsers = await prisma.user.findMany({
-      where: {
-        username: { in: mentions },
-      },
-      select: { id: true },
-    });
+    // Find users by username (only if there are mentions)
+    let taggedUsers: { id: string }[] = [];
+    if (mentions.length > 0) {
+      taggedUsers = await prisma.user.findMany({
+        where: {
+          username: { in: mentions },
+        },
+        select: { id: true },
+      });
+    }
 
-    // Create blog with tags
+    // Create blog with tags (only if there are tagged users)
     const blog = await prisma.blog.create({
       data: {
-        title,
-        content,
+        title: title.trim(),
+        content: content.trim(),
         authorID,
         mediaUrls,
-        tags: {
-          create: taggedUsers.map((user) => ({
-            userId: user.id,
-          })),
-        },
+        ...(taggedUsers.length > 0 && {
+          tags: {
+            create: taggedUsers.map((user) => ({
+              userId: user.id,
+            })),
+          },
+        }),
       },
       include: {
         tags: true,
@@ -107,7 +138,32 @@ export async function POST(req: Request) {
     return NextResponse.json(blog, { status: 201 });
   } catch (err) {
     console.error("❌ POST /api/blog Error:", err);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    
+    // Provide more specific error messages
+    if (err instanceof Error) {
+      // Check for Prisma errors
+      if (err.message.includes("Foreign key constraint")) {
+        return NextResponse.json(
+          { error: "Invalid author or user reference" },
+          { status: 400 }
+        );
+      }
+      if (err.message.includes("Unique constraint")) {
+        return NextResponse.json(
+          { error: "A blog with this information already exists" },
+          { status: 409 }
+        );
+      }
+      return NextResponse.json(
+        { error: err.message || "Server error" },
+        { status: 500 }
+      );
+    }
+    
+    return NextResponse.json(
+      { error: "An unexpected error occurred" },
+      { status: 500 }
+    );
   }
 }
 
