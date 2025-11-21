@@ -1,7 +1,7 @@
 // app/profile/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import ProfileSidebar from "@/components/ProfileSidebar";
 import ProfileBlogs from "@/components/ProfileBlogs";
 import { useSession } from "next-auth/react";
@@ -40,7 +40,7 @@ type TaggedBlog = {
   };
 };
 
-export default function ProfilePage() {
+function ProfilePageContent() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -308,5 +308,17 @@ export default function ProfilePage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function ProfilePage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen bg-white dark:bg-black text-gray-800 dark:text-white">
+        <div className="text-[#27B4F5] text-xl">Loading...</div>
+      </div>
+    }>
+      <ProfilePageContent />
+    </Suspense>
   );
 }
